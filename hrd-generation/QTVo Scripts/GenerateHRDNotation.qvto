@@ -1,0 +1,793 @@
+modeltype NOTATION uses 'http://www.eclipse.org/gmf/runtime/1.0.2/notation';
+modeltype ECORE uses "http://www.eclipse.org/emf/2002/Ecore";
+modeltype STYLE uses 'http://www.eclipse.org/papyrus/infra/viewpoints/policy/style';
+modeltype UML uses 'http://www.eclipse.org/uml2/5.0.0/UML';
+modeltype MT uses 'http://www.paluno.de/hazardmitigation';
+
+transformation graphicalHRD(in hrd:UML,in change:MT, out notation:NOTATION, out di:STYLE);
+property xwert: Integer=20;
+property ywert: Integer=20;
+property activityshapes:Set(Shape)=null;
+property counter: Integer=0;
+
+main() {
+
+	hrd.objectsOfType(Activity)->map ActivitytoDiagram();
+	hrd.objectsOfType(ControlFlow)->map CFlowtoEdge();
+	hrd.objectsOfType(ObjectFlow)->map OFlowtoEdge();
+	notation.objectsOfType(Diagram)->forEach(d)
+	{
+		d.edges+=notation.objectsOfType(Connector)
+	}
+-- fuege Konnektoren Diagramm hinzu.
+
+}
+
+mapping  Activity::ActivitytoDiagram():NOTATION::Diagram when {self.ownedBehavior->notEmpty()}
+{
+	type:= 'PapyrusUMLActivityDiagram';
+	name:= "HazardRelationDiagram";
+	measurementUnit:= MeasurementUnit::Pixel;
+	
+
+	var shape:notation::Shape:= object Shape{type:="2001"};
+	var layout:notation::LayoutConstraint:=object Bounds{};
+	shape.element:= self.oclAsType(ecore::EObject);
+	shape.layoutConstraint:=layout;
+	children+=shape;
+	var decnode1:notation::Node:= object DecorationNode{type:="5001"};
+	shape.children+=decnode1;
+
+	var decnode2:notation::Node:= object DecorationNode{type:="7001"};
+	var style1:notation::Style:= object SortingStyle{};
+	var style2:notation::Style:= object FilteringStyle{};
+	var layout1:notation::LayoutConstraint:= object Bounds{};
+	decnode2.styles+=style1;decnode2.styles+=style2; decnode2.layoutConstraint:=layout1;
+	shape.children+=decnode2;
+
+	var decnode3:notation::Node:= object DecorationNode{type:="7002"};
+	var style3:notation::Style:= object SortingStyle{};
+	var style4:notation::Style:= object FilteringStyle{};
+	var layout2:notation::LayoutConstraint:= object Bounds{};
+	decnode3.styles+=style3;decnode3.styles+=style4; decnode3.layoutConstraint:=layout2;
+	shape.children+=decnode3;
+
+	var decnode4:notation::Node:= object DecorationNode{type:="7003"};
+	var style5:notation::Style:= object SortingStyle{};
+	var style6:notation::Style:= object FilteringStyle{};
+	var layout3:notation::LayoutConstraint:= object Bounds{};
+	decnode4.styles+=style5;decnode4.styles+=style6; decnode4.layoutConstraint:=layout3;
+	shape.children+=decnode4;
+
+
+	var decnode:notation::Node:= object DecorationNode{type:="7004"};
+	
+ 	var bound:notation::LayoutConstraint := object Bounds{};
+	self.ownedElement->forEach(oe)
+	{
+		if oe.isOpaqueAction() then{decnode.children+= oe.getOpaqueAction()->map OpaquetoShape() } endif;
+	};
+	
+		self.ownedElement->forEach(oe)
+	{
+		if oe.isInitialNode() then{decnode.children+=oe.getInitialNode()->map InitialNodetoShape() }endif;
+	};
+	
+		self.ownedElement->forEach(oe)
+	{
+		 if oe.isMergeNode() then{decnode.children+=oe.getMergeNode()->map MergeNodetoShape()}endif;
+	};
+		self.ownedElement->forEach(oe)
+	{
+		if oe.isActivity() then{decnode.children+=oe.getActivity()->map ActivitytoShape();} endif;
+	};
+		self.ownedElement->forEach(oe)
+	{
+		if oe.isConditionalNode() then{decnode.children+=oe.getConditionalNode()->map ConditionalNodetoShape()}endif;
+	};
+	decnode.layoutConstraint:=bound;
+	shape.children+=decnode;
+
+	var stringstyle:NOTATION::Style:=object StringValueStyle{name:="diagram_compability_version"; stringValue:="1.0.0"};
+	var diastyle:NOTATION::Style:=object DiagramStyle{};
+	var papyrusstyle:NOTATION::Style:=object STYLE::PapyrusViewStyle {hrd.objectsOfType(Model)->forEach(m){ owner:=m.oclAsType(ecore::EObject)}};
+	styles+=stringstyle;
+	styles+= diastyle;
+	styles+=papyrusstyle;
+	element:=self.oclAsType(ecore::EObject);
+
+}
+
+mapping OpaqueAction::OpaquetoShape(): NOTATION::Shape
+{
+	type:="3007";
+--Anzeigen von Stereotypes
+	var detail1:ecore::EStringToStringMapEntry:= object EStringToStringMapEntry{key:="StereotypeWithQualifiedNameList"; value:=""};
+	var detail2:ecore::EStringToStringMapEntry:= object EStringToStringMapEntry{key:="StereotypeList"};
+	
+	var Stereotypes:= self.getAppliedStereotypes();
+	Stereotypes->forEach(st)
+ 	{
+ 		if st.name="Hazard" then detail2.value:="profile::Hazard" endif;
+ 		if st.name="Safety_Goal" then detail2.value:="profile::Safety_Goal" endif;
+ 		if st.name="trigger_Condition" then detail2.value:="profile::trigger_Condition" endif;
+   	};
+	var detail3:ecore::EStringToStringMapEntry:= object EStringToStringMapEntry{key:="Stereotype_Presentation_Kind"; value:="HorizontalStereo"};
+	var detail4:ecore::EStringToStringMapEntry:= object EStringToStringMapEntry{key:="PropStereoDisplay"; value:=""};
+	var detail5:ecore::EStringToStringMapEntry:= object EStringToStringMapEntry{key:="StereotypePropertyLocation"; value:="Compartment"};
+	var annotate:ecore::EAnnotation:=object EAnnotation
+	{
+	source:="Stereotype_Annotation";
+	details+=detail1;
+	details+=detail2;
+	details+=detail3;
+	details+=detail4; 
+	details+=detail5
+    };
+	eAnnotations:=annotate;
+	--Ende Anzeigen Stereotype
+	var decnode:notation::Node:= object DecorationNode{type:="5003"};
+	children+=decnode;
+ 	var style:notation::Style := object HintedDiagramLinkStyle{};
+  	styles:=style;
+	element:=self.oclAsType(ecore::EObject);
+ 	var bound:notation::LayoutConstraint := object Bounds{x:=xwert; y:=ywert};
+  
+	if counter=4 then {xwert:=20; counter:=0} else xwert:=xwert+200 endif;
+ 	if xwert=20 then ywert:=ywert+50 endif;
+ 	counter:=counter+1;
+	layoutConstraint:=bound;
+
+}
+
+mapping OpaqueAction::OpaqueActivitytoShape(referenced:Boolean): NOTATION::Shape
+{
+	type:="3007";
+
+	var decnode:notation::Node:= object DecorationNode{type:="5003"};
+	children+=decnode;
+ 	var style:notation::Style := object HintedDiagramLinkStyle{};
+  	styles:=style;
+	element:=self.oclAsType(ecore::EObject);
+ 	var bound:notation::LayoutConstraint := object Bounds
+ 	{
+ 		if referenced=true then x:=20 else x:=450 endif;
+ 		 y:=20;
+ 	};
+  
+
+ 
+	layoutConstraint:=bound;
+	if self.input->notEmpty() then {self.input->forEach(i){children+=i->map InputtoShape()}} endif;
+	if self.output->notEmpty() then {self.output->forEach(o){children+=o->map OutputtoShape()}} endif;
+
+	
+
+}
+
+
+mapping ActivityParameterNode::ParameterNodetoShape(referenced:Boolean): NOTATION::Shape
+{	
+	
+	type:="3059";
+	
+	var decnode:notation::Node:= object DecorationNode{type:="5071"};
+
+	children:=decnode;
+	var style:notation::Style := object HintedDiagramLinkStyle{};
+  	styles:=style; 
+ 
+  	var bound:notation::LayoutConstraint := object Bounds{if referenced=true then x:=20 else x:=450 endif;};
+  	layoutConstraint:=bound;
+  	element:= self.oclAsType(ecore::EObject);};
+
+mapping InputPin::InputtoShape():NOTATION::Shape
+{
+	type:="3013";
+	
+	var decnode:notation::Node:= object DecorationNode{type:="5009"};
+	var bound:notation::LayoutConstraint := object Location{};
+  	decnode.layoutConstraint:=bound;
+	children+=decnode;
+	
+	var decnode2:notation::Node:= object DecorationNode{type:="5085"};
+	var bound2:notation::LayoutConstraint := object Location{};
+  	decnode2.layoutConstraint:=bound2;
+	children+=decnode2;
+	var style:notation::Style := object HintedDiagramLinkStyle{};
+  	styles:=style;
+  	element:=self.oclAsType(ecore::EObject);
+  	var bound3:notation::LayoutConstraint := object Bounds{};
+  	layoutConstraint:= bound3;
+
+}
+
+mapping OutputPin::OutputtoShape():NOTATION::Shape
+{
+	type:="3014";
+	
+	var decnode:notation::Node:= object DecorationNode{type:="5009"};
+	var bound:notation::LayoutConstraint := object Location{};
+  	decnode.layoutConstraint:=bound;
+	children+=decnode;
+	
+	var decnode2:notation::Node:= object DecorationNode{type:="5085"};
+	var bound2:notation::LayoutConstraint := object Location{};
+  	decnode2.layoutConstraint:=bound2;
+	children+=decnode2;
+	var style:notation::Style := object HintedDiagramLinkStyle{};
+  	styles:=style;
+  	element:=self.oclAsType(ecore::EObject);
+  	var bound3:notation::LayoutConstraint := object Bounds{};
+  	layoutConstraint:= bound3;
+
+}
+
+mapping InitialNode::InitialNodetoShape(): NOTATION::Shape
+{
+	type:="3004";
+--Anzeigen von Stereotypes
+	var detail1:ecore::EStringToStringMapEntry:= object EStringToStringMapEntry{key:="StereotypeWithQualifiedNameList"; value:=""};
+	var detail2:ecore::EStringToStringMapEntry:= object EStringToStringMapEntry{key:="StereotypeList"};
+	
+	var Stereotypes:= self.getAppliedStereotypes();
+	Stereotypes->forEach(st)
+ 	{
+ 		if st.name="Context_Conjunction" then detail2.value:="profile::Context_Conjunction" endif;
+ 		if st.name="Context_Disjunction" then detail2.value:="profile::Context_Disjunction" endif;
+
+   	};
+	var detail3:ecore::EStringToStringMapEntry:= object EStringToStringMapEntry{key:="Stereotype_Presentation_Kind"; value:="HorizontalStereo"};
+	var detail4:ecore::EStringToStringMapEntry:= object EStringToStringMapEntry{key:="PropStereoDisplay"; value:=""};
+	var detail5:ecore::EStringToStringMapEntry:= object EStringToStringMapEntry{key:="StereotypePropertyLocation"; value:="Compartment"};
+	var annotate:ecore::EAnnotation:=object EAnnotation
+	{
+	source:="Stereotype_Annotation";
+	details+=detail1;
+	details+=detail2;
+	details+=detail3;
+	details+=detail4; 
+	details+=detail5
+    };
+	eAnnotations:=annotate;
+	--Ende Anzeigen Stereotype
+	var decnode:notation::Node:= object DecorationNode{type:="5080"};
+	var locate:notation::LayoutConstraint := object Location{};
+	decnode.layoutConstraint:=locate;
+	children+=decnode;
+ 	var style:notation::Style := object HintedDiagramLinkStyle{};
+  	styles:=style;
+	element:=self.oclAsType(ecore::EObject);
+ 	var bound:notation::LayoutConstraint := object Bounds{x:=xwert; y:=ywert};
+  
+	if counter=4 then {xwert:=20; counter:=0} else xwert:=xwert+200 endif;
+ 	if xwert=20 then ywert:=ywert+50 endif;
+ 	counter:=counter+1;
+	layoutConstraint:=bound;
+}
+
+mapping MergeNode::MergeNodetoShape(): NOTATION::Shape
+{
+	type:="3039";
+--Anzeigen von Stereotypes
+	var detail1:ecore::EStringToStringMapEntry:= object EStringToStringMapEntry{key:="StereotypeWithQualifiedNameList"; value:=""};
+	var detail2:ecore::EStringToStringMapEntry:= object EStringToStringMapEntry{key:="StereotypeList"};
+	
+	var Stereotypes:= self.getAppliedStereotypes();
+	Stereotypes->forEach(st)
+ 	{
+ 		if st.name="Hazard_Relation" then detail2.value:="profile::Hazard_Relation" endif;
+ 		
+
+   	};
+	var detail3:ecore::EStringToStringMapEntry:= object EStringToStringMapEntry{key:="Stereotype_Presentation_Kind"; value:="HorizontalStereo"};
+	var detail4:ecore::EStringToStringMapEntry:= object EStringToStringMapEntry{key:="PropStereoDisplay"; value:=""};
+	var detail5:ecore::EStringToStringMapEntry:= object EStringToStringMapEntry{key:="StereotypePropertyLocation"; value:="Compartment"};
+	var annotate:ecore::EAnnotation:=object EAnnotation
+	{
+	source:="Stereotype_Annotation";
+	details+=detail1;
+	details+=detail2;
+	details+=detail3;
+	details+=detail4; 
+	details+=detail5
+    };
+	eAnnotations:=annotate;
+	--Ende Anzeigen Stereotype
+	var decnode:notation::Node:= object DecorationNode{type:="5099"};
+	var locate:notation::LayoutConstraint := object Location{};
+	decnode.layoutConstraint:=locate;
+	children+=decnode;
+ 	var style:notation::Style := object HintedDiagramLinkStyle{};
+  	styles:=style;
+	element:=self.oclAsType(ecore::EObject);
+ 	var bound:notation::LayoutConstraint := object Bounds{x:=xwert; y:=ywert};
+  
+	if counter=4 then {xwert:=20; counter:=0} else xwert:=xwert+200 endif;
+ 	if xwert=20 then ywert:=ywert+50 endif;
+ 	counter:=counter+1;
+	layoutConstraint:=bound;
+}
+
+mapping ConditionalNode::ConditionalNodetoShape(): NOTATION::Shape
+{
+	type:="3069";
+	transparency:=100;
+--Anzeigen von Stereotypes
+	var detail1:ecore::EStringToStringMapEntry:= object EStringToStringMapEntry{key:="StereotypeWithQualifiedNameList"; value:=""};
+	var detail2:ecore::EStringToStringMapEntry:= object EStringToStringMapEntry{key:="StereotypeList"};
+	
+	var Stereotypes:= self.getAppliedStereotypes();
+	Stereotypes->forEach(st)
+ 	{
+ 		if st.name="Mitigation" then detail2.value:="profile::Mitigation" endif;
+ 		
+
+   	};
+	var detail3:ecore::EStringToStringMapEntry:= object EStringToStringMapEntry{key:="Stereotype_Presentation_Kind"; value:="HorizontalStereo"};
+	var detail4:ecore::EStringToStringMapEntry:= object EStringToStringMapEntry{key:="PropStereoDisplay"; value:=""};
+	var detail5:ecore::EStringToStringMapEntry:= object EStringToStringMapEntry{key:="StereotypePropertyLocation"; value:="Compartment"};
+	var annotate:ecore::EAnnotation:=object EAnnotation
+	{
+	source:="Stereotype_Annotation";
+	details+=detail1;
+	details+=detail2;
+	details+=detail3;
+	details+=detail4; 
+	details+=detail5
+    };
+	eAnnotations:=annotate;
+	--Ende Anzeigen Stereotype
+	var decnode:notation::Node:= object DecorationNode{type:="5119"};
+	var decnode2:notation::Node:= object DecorationNode{type:="7008"};
+	var bounds:notation::LayoutConstraint := object Bounds{};
+	decnode2.layoutConstraint:=bounds;
+	children+=decnode;
+	children+=decnode2;
+ 	var style:notation::Style := object HintedDiagramLinkStyle{};
+  	styles:=style;
+	element:=self.oclAsType(ecore::EObject);
+	--Position muss angepasst werden.
+	var count:=0;
+ 	var bound:notation::LayoutConstraint := object Bounds
+ 	{
+ 		x:=20;width:=200;
+ 		unusedactivityShapes()->forEach(as)
+ 		{
+ 			if count=0 then 
+			{
+				var boundsshape:=notation.objectsOfType(Bounds)->forEach(b)
+				{
+					if as.layoutConstraint=b then
+					{
+						y:=b.y-30; height:=b.height+80;
+						activityshapes+=as;
+
+					}
+					else{} endif;
+				}
+			} 
+ 			else {}endif;	
+ 			count:=1;
+ 		}
+
+ 	};
+  
+
+	layoutConstraint:=bound;
+
+}
+
+mapping Activity::ActivitytoShape():NOTATION::Shape
+{
+
+	type:="3083";
+	var decnode:notation::Node:= object DecorationNode{type:="5142"};
+	var decnode1:notation::Node:= object DecorationNode{type:="5143"};
+	children+=decnode; children+=decnode1;
+	var decnode2:notation::Node:= object DecorationNode{type:="7014"};
+	var style:notation::Style:= object SortingStyle{};
+	var style1:notation::Style:= object FilteringStyle{};
+	var layout:notation::LayoutConstraint:= object Bounds{};
+	decnode2.styles+=style;decnode2.styles+=style1; decnode2.layoutConstraint:=layout;
+	children+=decnode2;
+	var decnode3:notation::Node:= object DecorationNode{type:="7015"};
+	var style2:notation::Style:= object SortingStyle{};
+	var style3:notation::Style:= object FilteringStyle{};
+	var layout1:notation::LayoutConstraint:= object Bounds{};
+	decnode3.styles+=style2;decnode3.styles+=style3; decnode3.layoutConstraint:=layout1;
+	children+=decnode3;	
+	var decnode4:notation::Node:= object DecorationNode{type:="7016"};
+	var style4:notation::Style:= object SortingStyle{};
+	var style5:notation::Style:= object FilteringStyle{};
+	var layout2:notation::LayoutConstraint:= object Bounds{};
+	decnode4.styles+=style4;decnode4.styles+=style5; decnode4.layoutConstraint:=layout2;
+	children+=decnode4;	
+
+	element:=self.oclAsType(ecore::EObject);
+	var ywert2:=0;
+	var layout4:notation::LayoutConstraint:= object Bounds{x:=20;y:=ywert+200; height:=200;ywert2:=y+height; width:=600} ;
+	layoutConstraint:=layout4;var decnode5:notation::Node:= object DecorationNode{type:="7013"};
+	xwert:=20;ywert:=ywert+200;
+
+	var layout3:notation::LayoutConstraint:= object Bounds{};
+	decnode5.layoutConstraint:=layout3;
+	-- erstelle Elemente, die in der Activity sind
+
+	self.ownedElement->forEach(on)
+	{
+		if on.isOpaqueAction() then{decnode5.children+=on.getOpaqueAction()->map OpaqueActivitytoShape(on.isReferencedinMitigationList())} endif;
+	};	
+	self.ownedElement->forEach(on)
+	{
+		if on.isControlNode() then{decnode5.children+=on.getControlNode()->map ControlNodetoShape(on.isReferencedinMitigationList())} endif;
+	};
+	xwert:=20;
+	self.ownedElement->forEach(on)
+	{	
+		
+		if on.isParameterNode() then{children+=on.getParameterNode()->map ParameterNodetoShape(on.isReferencedinMitigationList())} endif;	
+	};
+	children+=decnode5;
+	
+	ywert:=ywert2+50;
+	xwert:=20;	
+	counter:=0;
+}
+
+mapping ControlNode::ControlNodetoShape(referenced:Boolean):NOTATION::Shape
+{
+	
+	var cn:=self.toString();
+	if cn.substringBefore("DecisionNode")!=null then type:="3038" 
+	else if cn.substringBefore("MergeNode")!=null then type:="3039" 
+	else if cn.substringBefore("ForkNode")!=null then type:="3040" 
+	else if cn.substringBefore("JoinNode")!=null then type:="3041" 
+	endif endif endif endif;
+	
+	var decnode:notation::Node:= object DecorationNode{};
+	var bound:notation::LayoutConstraint := object Location{};
+  	decnode.layoutConstraint:=bound;
+  
+  	if type="3038" then decnode.type:="5043" 
+  	else if type="3039" then decnode.type:="5099" 
+  	else if type="3040" then decnode.type:="5100" 
+  	else if type="3041" then decnode.type:="5042" 
+  	endif endif endif endif;
+  	
+	children+=decnode;
+	if type="3038" or type="3041"	
+	then 
+	{
+	var decnode2:notation::Node:= object DecorationNode{};
+	var bound2:notation::LayoutConstraint := object Location{};
+  	decnode2.layoutConstraint:=bound2;
+
+  	if type="3038" then decnode2.type:="5098" else decnode2.type:="5101" endif;
+	children+=decnode2;
+	} endif;
+	
+	var style:notation::Style := object HintedDiagramLinkStyle{};
+  	styles:=style;
+  	element:=self.oclAsType(ecore::EObject);
+  	var bound3:notation::LayoutConstraint := object Bounds
+  	{
+  		if referenced=true then x:=20 else x:=450 endif;
+  		y:=20;
+  	};
+  	layoutConstraint:=bound3;
+
+	
+}
+
+mapping ControlFlow::CFlowtoEdge(): NOTATION::Connector
+{
+	var nodes:= notation.objectsOfType(Shape);
+	var sourceshape:NOTATION::Shape:=null;
+	var targetshape:NOTATION::Shape:=null;
+	var selfmessage:Boolean:=false;
+	nodes-> forEach(n)
+	{
+		if self.source.toString() = n.element.toString() then sourceshape:=n endif;
+		if self.target.toString()= n.element.toString() then targetshape:=n endif; 
+	};
+
+	element:=self.oclAsType(ecore::EObject);
+	source:= sourceshape;
+	target:= targetshape;
+	type:="4004";
+	var decnode:notation::Node:= object DecorationNode{type:="6003"};
+	var layout:notation::LayoutConstraint:= object Location{ y:=20};
+	decnode.layoutConstraint:= layout;
+	children+=decnode;
+	var decnode1:notation::Node:= object DecorationNode{type:="6004"};
+	var layout1:notation::LayoutConstraint:= object Location{ y:=20};
+	decnode1.layoutConstraint:= layout1;
+
+	children+=decnode1;
+	var decnode2:notation::Node:= object DecorationNode{type:="6009"};
+	var layout2:notation::LayoutConstraint:= object Location{ y:=20};
+	decnode2.layoutConstraint:= layout2;
+	children+=decnode2;
+	var decnode3:notation::Node:= object DecorationNode{type:="6011"};
+	var layout3:notation::LayoutConstraint:= object Location{ y:=-20};
+	decnode3.layoutConstraint:= layout3;
+
+	children+=decnode3;
+	var fontstyle:notation::Style:= object FontStyle{};
+	styles+=fontstyle;
+	var bends: Bendpoints:= object RelativeBendpoints{};
+
+	bendpoints:=bends; 
+
+	var sanchor:notation::Anchor:= object IdentityAnchor{};
+	var tanchor:notation::Anchor:= object IdentityAnchor{};
+
+	sourceAnchor:=sanchor;
+	targetAnchor:=tanchor
+}
+
+mapping ObjectFlow::OFlowtoEdge(): NOTATION::Connector
+{
+
+	var nodes:= notation.objectsOfType(Shape);
+	var sourceshape:NOTATION::Shape:=null;
+	var targetshape:NOTATION::Shape:=null;
+	var selfmessage:Boolean:=false;
+	nodes-> forEach(n)
+	{
+		if self.source.toString() = n.element.toString() then sourceshape:=n endif;
+		if self.target.toString()= n.element.toString() then targetshape:=n endif; 
+	};
+
+	element:=self.oclAsType(ecore::EObject);
+	source:= sourceshape;
+	target:= targetshape;
+	type:="4003";
+	var decnode:notation::Node:= object DecorationNode{type:="6001"};
+	var layout:notation::LayoutConstraint:= object Location{ y:=20};
+	decnode.layoutConstraint:= layout;
+	children+=decnode;
+	var decnode1:notation::Node:= object DecorationNode{type:="6002"};
+	var layout1:notation::LayoutConstraint:= object Location{ y:=20};
+	decnode1.layoutConstraint:= layout1;
+
+	children+=decnode1;
+	var decnode2:notation::Node:= object DecorationNode{type:="6005"};
+	var layout2:notation::LayoutConstraint:= object Location{ y:=20};
+	decnode2.layoutConstraint:= layout2;
+	children+=decnode2;
+	var decnode3:notation::Node:= object DecorationNode{type:="6006"};
+	var layout3:notation::LayoutConstraint:= object Location{ y:=-20};
+	decnode3.layoutConstraint:= layout3;
+	children+=decnode3;
+	var decnode4:notation::Node:= object DecorationNode{type:="6007"};
+	var layout4:notation::LayoutConstraint:= object Location{ y:=-20};
+	decnode4.layoutConstraint:= layout4;
+	children+=decnode4;
+	var decnode5:notation::Node:= object DecorationNode{type:="6008"};
+	var layout5:notation::LayoutConstraint:= object Location{ y:=-20};
+	decnode5.layoutConstraint:= layout5;
+	children+=decnode5;
+	var decnode6:notation::Node:= object DecorationNode{type:="6010"};
+	var layout6:notation::LayoutConstraint:= object Location{ y:=-20};
+	decnode6.layoutConstraint:= layout6;
+	children+=decnode6;
+	var fontstyle:notation::Style:= object FontStyle{};
+	styles+=fontstyle;
+	var bends: Bendpoints:= object RelativeBendpoints{};
+
+	bendpoints:=bends; 
+
+	var sanchor:notation::Anchor:= object IdentityAnchor{};
+	var tanchor:notation::Anchor:= object IdentityAnchor{};
+
+	sourceAnchor:=sanchor;
+	targetAnchor:=tanchor
+}
+
+helper Element::isOpaqueAction(): Boolean
+{
+	var correct:=false;
+	hrd.objectsOfType(OpaqueAction)->forEach(oa)
+	{
+		if self=oa then correct:=true endif
+	};
+	return correct;
+}
+
+helper Element::isControlNode(): Boolean
+{
+	var correct:=false;
+	hrd.objectsOfType(ControlNode)->forEach(cn)
+	{
+		if self=cn then correct:=true endif
+	};
+	return correct;
+}
+
+helper Element::isParameterNode(): Boolean
+{
+	var correct:=false;
+	hrd.objectsOfType(ActivityParameterNode)->forEach(pn)
+	{
+		if self=pn then correct:=true endif
+	};
+	return correct;
+}
+
+helper Element::isConditionalNode(): Boolean
+{
+	var correct:=false;
+	hrd.objectsOfType(ConditionalNode)->forEach(cn)
+	{
+		if self=cn then correct:=true endif
+	};
+	return correct;
+}
+
+helper Element::isInitialNode(): Boolean
+{
+	var correct:=false;
+	hrd.objectsOfType(InitialNode)->forEach(inn)
+	{
+		if self=inn then correct:=true endif
+	};
+	return correct;
+}
+
+helper Element::isMergeNode(): Boolean
+{
+	var correct:=false;
+	hrd.objectsOfType(MergeNode)->forEach(mn)
+	{
+		if self=mn then correct:=true endif
+	};
+	return correct;
+}
+
+helper Element::isActivity(): Boolean
+{
+	var correct:=false;
+	hrd.objectsOfType(Activity)->forEach(a)
+	{
+		if self=a then correct:=true endif
+	};
+	return correct;
+}
+
+helper Element::getOpaqueAction(): OpaqueAction
+{
+	var opaque:OpaqueAction=null;
+	hrd.objectsOfType(OpaqueAction)->forEach(oa)
+	{
+		if self=oa then opaque:=oa endif
+	};
+	return opaque;
+}
+
+helper Element::getConditionalNode(): ConditionalNode
+{
+	var conditional:ConditionalNode=null;
+	hrd.objectsOfType(ConditionalNode)->forEach(cn)
+	{
+		if self=cn then conditional:=cn endif
+	};
+	return conditional;
+}
+
+helper Element::getInitialNode(): InitialNode
+{
+	var initial:InitialNode=null;
+	hrd.objectsOfType(InitialNode)->forEach(inn)
+	{
+		if self=inn then initial:=inn endif
+	};
+	return initial;
+}
+
+helper Element::getMergeNode(): MergeNode
+{
+	var merge:MergeNode=null;
+	hrd.objectsOfType(MergeNode)->forEach(mn)
+	{
+		if self=mn then merge:=mn endif
+	};
+	return merge;
+}
+
+helper Element::getActivity(): Activity{
+	var activity:Activity=null;
+	hrd.objectsOfType(Activity)->forEach(a)
+	{
+		if self=a then activity:=a endif
+	};
+	return activity;
+}
+
+helper Element::getControlNode(): ControlNode
+{
+	var correct:ControlNode=null;
+	hrd.objectsOfType(ControlNode)->forEach(cn)
+	{
+		if self=cn then correct:=cn endif
+	};
+	return correct;
+}
+
+helper Element::getParameterNode(): ActivityParameterNode
+{
+	var correct:ActivityParameterNode=null;
+	hrd.objectsOfType(ActivityParameterNode)->forEach(pn)
+	{
+		if self=pn then correct:=pn endif
+	};
+	return correct;
+}
+
+helper Element::isReferencedinMitigationList():Boolean
+{
+	var referenced:=false;
+	change.objectsOfType(InsertActivity)->forEach(iA)
+	{
+		if self.isOpaqueAction()=true then 
+		if self.getOpaqueAction().name=iA.activityName then referenced:=true endif endif;
+	};
+		change.objectsOfType(SubstituteActivity)->forEach(sA)
+	{
+		if self.isOpaqueAction()=true then 
+		if self.getOpaqueAction().name=sA.newActivityName then referenced:=true endif endif;
+	};
+	change.objectsOfType(InsertPin)->forEach(iP)
+	{
+		if self.isParameterNode()=true then 
+		if self.getParameterNode().name=iP.pinName then referenced:=true endif endif;
+	};
+	change.objectsOfType(SubstitutePin)->forEach(sP)
+	{
+		if self.isParameterNode()=true then 
+		if self.getParameterNode().name=sP.newPinName then referenced:=true endif endif;
+	};
+	change.objectsOfType(InsertControlNode)->forEach(iCN)
+	{
+		if self.isParameterNode()=true then 
+		if self.getParameterNode().name=iCN.NodeName then referenced:=true endif endif;
+	};
+	change.objectsOfType(SubstituteControlNode)->forEach(sCN)
+	{
+		if self.isControlNode()=true then 
+		if self.getControlNode().name=sCN.newNodeName then referenced:=true endif endif;
+	};
+	change.objectsOfType(InsertActivityEdge)->forEach(iAE)
+	{
+		if self.isControlNode()=true then 
+		if self.getControlNode().name=iAE.SourceName or self.getControlNode().name=iAE.targetName then referenced:=true endif endif;
+		if self.isParameterNode()=true then 
+		if self.getParameterNode().name=iAE.SourceName or self.getParameterNode().name=iAE.targetName then referenced:=true endif endif;
+		if self.isOpaqueAction()=true then 
+		if self.getOpaqueAction().name=iAE.SourceName or self.getOpaqueAction().name=iAE.targetName then referenced:=true endif endif;
+	};
+	change.objectsOfType(SubstituteActivityEdge)->forEach(sAE)
+	{
+		if self.isControlNode()=true then 
+		if self.getControlNode().name=sAE.newSourceName or self.getControlNode().name=sAE.newTargetName then referenced:=true endif endif;
+		if self.isParameterNode()=true then 
+		if self.getParameterNode().name=sAE.newSourceName or self.getParameterNode().name=sAE.newTargetName then referenced:=true endif endif;
+		if self.isOpaqueAction()=true then 
+		if self.getOpaqueAction().name=sAE.newSourceName or self.getOpaqueAction().name=sAE.newTargetName then referenced:=true endif endif;
+	};
+	
+	return referenced;
+}
+
+helper unusedactivityShapes():Set(Shape)
+{
+	var unused:Set(Shape)=null;
+	
+	notation.objectsOfType(Shape)->forEach(s)
+	{
+		if s.type="3083" then {if activityshapes->includes(s) =false then {unused+=s}endif;} endif;
+	};
+	return unused;
+	
+}

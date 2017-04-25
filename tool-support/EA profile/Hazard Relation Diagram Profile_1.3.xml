@@ -1,0 +1,371 @@
+<MDG.Technology version="1.0"><Documentation id="HRD" name="Hazard Relation Diagram Modeling" version="1.3" notes="An implementation of a UML profile for Hazard Relation Diagrams according to:&#xA;&#xA;B. Tenbergen, T. Weyer, K. Pohl K (2015) Supporting the Validation of Adequacy in Requirements-Based Hazard Mitigations. In: S. Fricker, K. Schneider (eds.): Requirements Engineering: Foundation for Software Quality, LNCS vol 9013. Springer, Heidelberg, pp 17–32." infoURI="http://www.tenbergen.org"/><Logo><Image type="bitmap" xmlns:dt="urn:schemas-microsoft-com:datatypes" dt:dt="bin.base64">Qk02JwAAAAAAADYAAAAoAAAANAAAAEAAAAABABgAAAAAAAAnAAATCwAAEwsAAAAAAAAAAAAA
+////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////3t7e3d3d5ubm29vbzMzM4uLi
+5+fn2dnZz8/P5+fn5ubm1NPT09PT6urq6Ojo1NTU////////////////////////////////
+////////////////////////////////////////////////////////////////////////
++Pj4+Pj49PT1+Pf3////////8vP04+Pj7Ovs7u3t2dnZ////////////////////////7/Dw
+6+vs+fj3////////4uDe29zc5OPi6Ojp////////////////////////////////////////
+////////////////////////////////////////////////////////////////y8zM2trb
+2dfXy8rJ////////1dbW3t/fysrK19XU2drZ////////////////////2Nnb29vcyMbDzc7N
+////////zMzM4N/gurm3z8/N////////////////////////////////////8/Hw8/Lw8/Lw
+8/Lw8/Lw8/Lw8/Lw8/Lw8/Lw8/Lx9PLx9PLx9PLx9vTy4+Piytbfz9nf4ODi3tza2tjX0s7M
+x9bf197izdHV7Ojl8O3r+fb1v7y7+/j2+vXz1tzgxs3Szdng8Ozp6ubl8+/r4OHhwsvSyNXe
+/fj09vLw////xsPB//z5+/f1+/f0+fXy////////////////y9Tb2uv32ur12ur12ur12ur1
+2ur12ur12ur12ur12en02On02uv41+v31+v4zd/sssjWtsnVyN/u1Ov70+z7y+LyrcPStcnX
+vNbpyOT2xeDzxuP2qMHSxuX5xOT5r8fXrsjbp8PWweT6vd/3ut72tNLnm7jLo7/Rtdz3o8ff
+psrkfZutncHckrfPl73Vm8Xgiq3E///9////////z9zl5fT/4/L84/L84/L84/L84/L84/L8
+4/L84/L84vH74fP+wc7XyNjhyNjkzN3ozd/ryNvptcfRusvXtcjVu83Zx93rw9jn1O3+0On6
+z+j50ez9scnZrsfVq8TVpLnH0vH/oLrLor3MpcLTvNjqxuf+stLmsdDlw+b/nrvQo8LWlbLF
+pMXdn8DWpcfembrPiaGxyNfh////////z9zl5PT+4/L84/L84/L84/L84/L84/L84/L84/L8
+4vD64fP9xtPdxNLcrLzIs7/I0OLvxtvqtMLJscLRqb3G1uj5x9zqxdrp0uv80ev90Or81fH/
+jaKytM/hnrG/mrG+0/H/n7nLrcfXmrTHmrPByer/s9PnstLnwuX9pMPYpsbbiKK0m7fLmbrR
+ka/BncHZiKnA4uLh////////0+Dp6Pj/5fT+5fT/5/b/5vb/5fT+5vX/5/f/5vX/5PP95PT+
+5fX/1+r13/D61ef0tMTPpbO+4/r/3/X/3vX/3PP/o7O/prfD1/D/vs/exNHXvMvSxM/a0en2
+0/H/orvMsc3hmLHBy+3/yOj+yOr/ttXqla/BlK2/yOv/osHVs9TqiaO1r9Pqq87lrM/oncDX
+kaa2x9jk7u7u4uHgpK+2usbPytfgydbfsb3FvMnRzdrjytfgtcDIxNHZzNrjwtDZsb3GwM/Y
+2uz5ydfgvcrUtsTMt8fUrsHPscbVssnaorzPnr3RttLmytvmusPJws7Vydbf0ODqwdvt1uLq
+2Ofv0uPuyt3qxdvqv9jpt9Xos9Xrq8/nob/UmbXIxuv/nLvPv+b/u+L7uuH8u+T/qtLt0tPT
+zMzM////1OLq6Pj/5fT+5fT/5/b/6fj/ztzlws/XxdTdw8/Xy9ni0eDp0N/q1ObweIKJ2efx
+y9fiucjQmqi1na23rcLQi6O0rcfZsdXtqMfcwdjnvtfnv9nqo7rKqsLSlaayz9zmrLjCr7rB
+rLzHoLPCma69qMLSmLXHr9PpmrjNo8HVr9DmlbPHqMrgpsjfpsjfm77Uip+uytrk5+fn/vz7
+xtLb6vr/5fT+5fT+5fT+6Pf/xNPet8TMtsLIzNnjuMPK5/f/4vH94/b/u8rUyNXe4e/4zNzm
+w9XhvNDes8vctdDjudrwsdjxq8ne1e7/0On70+7/rcTTv9nqwdrq3ejv3+312en00uXyzOPz
+xt/yvdrvt9nwrNHppcPYnbzRqcjdjqu/o8LXmLnPmrnNpMjfj7bQ7uvo6unp2uDjmLHBtL/G
+0d/oztzlztzl0N3mxtPd3ev12ujx1+bv2+nz4fL84O/74fT/ydnk3vD9wNDcl6Ss1+350+f1
+0+n2y9/tlqSvtL/Gxdbj1O//z+n60uz+o7jHvtfozuv+wt/0wN7zvt3zwuL2w+P5wuP4wN/1
+u9zxvd71xOf/rc3itdbtjKa4stbur9PqrtLrn8LakaSyv9Le0tLS////1ODo6fn/5/b/5/b/
+5/b/6fj/0t/o6Pf/5vX/5vX/5PP94fH74fH81+jzm6euw8/ZtcLJ0N/q3PL/2e792O/92/L/
+v8/dv8zUvcbMtMDMxtjl0+7/orfFts7exuL1wdzvvtrtxeP4lq/CgpOihp2vobrKvuD2ttbs
+t9jwnrzRoL/Ub4WTnLrRkK/Bm7vRmrzRmcDb8e/u0NDQ////z9zl5fX/zNrjztzl0+Hq1ePt
+wc7W1eTu0N3nztzl0t/n5fX/4fH81OXvx9XfzNznytnjusrWzODsx9voyN3px9zqt8rXyd3s
+1uz72PD/0uv7z+n7wdrrp73Mvdjqsszeq8XXt9Tou9ntss/irsvduNfstNPop8TYpsPYstPp
+sdLpxOz/wOf/u+L7veX/ueH7st/+7u3s5ubm////0d7nzNni7Pv/7f3/tsTSqLvHqr/Ol6u5
+v+D1web/q9b0z93l4fH85vr/tcTO1+XvvMnVvcnRo7O/ucrWlq2/q8PTk67Fq87iq8rg0+z8
+zuf40ev8uNDgv9jqy+j7wdbkxNrpw9vsv9npvtjrvNnsuNbqsNDkq8ziwOL6u9/4n7vPl7TH
+k7HGnL3Rkq/Ctt34pMfe1Nvf5ubm////0d7n1ePsr7zGrri+r77Kuc3YqL3NpbvKoLvOlK/B
+sNjymaSrz97owdDZkp6mxdTeucPKr73Gu8rUqb3MsMbVkae3psTXlrLGr9Dm0+z80Or7uNDf
+0u3/p77Nmq258///3Oz2qLS9tsXPrL7Omq++jaSzxef9vOX/nbvQsNDlsNDnrtHortDorNDn
+rNDposbel7XJ09zi0NDQ////0N3m1uTu0+Hq0+Hrz+DqzN/rs8bSyeDww9ztv9rts8/j4/L8
+5fX/z9/py9vmytnj0uHr0eHstcbSy+HvxdzswtzuudXntNTpuNLk0uv80uv9t8/dzun8y+f5
+uc/eydXesLrCsL3EssLOorTAutHgm7TIlbLEqcvin73SsNHmsNHortHnrM/mrNDorM/opMnh
+j6i5zdri0tLS////z9zl5vX/5fT+5fT+5fT+6fj/sb7Hw83Vt8HKvsvQwsrS5/j/5fX/z9/p
+rrzF4vX/3O/93/P/rr/Iu8zZsMPNuMvarbzIxNnn1u7/0uv9vNTjz+n6zej6zOj6x+P2v9Xk
+wtrpv9jpvNfnu9bottPltdPnstLnq8vhwOL6sdHplbHFmrfNp8felbLGmLnPoMHXrdTw2t3e
+5ubm////z9zl5PT+4/L84/L84/L85/b/zNjivcrUtsXK4uv4ydffzd3lwc3W0+PtusnT3/H/
+2+773O/+zuHtqr3Kp7fCr8HL1+/+0Ob1x97uzuj6tszbw97uxNztyeX3yub6yeb7yOb7xuX7
+xuX5xeT6xOX6w+P6weT6weP6vuD4vuH4v+P7veP7u+D6u+L7uuD7uOD6sNz77Ozr5ubm////
+y9ff4/X/4vL94vL94/P+3Oz2t8jT6vv/5/f/3/D72Ofy1Obxytnju87ax9jk3fH/2u/90+f1
+scXSz+b2scXTscXSrMHRuc/doLbHlai3rMPUqcLTo7rLt9PkyOf8xeT6xOT6wuP6weP5v+L5
+vuL5veH5u+H5uuD5ud75uN/4t934tN34s9z4stz4sdv4sdz5nsvp+PXzzs7O////+/r55ebm
+5+fo5+fo6urq4ODhwNPf8fDw6Ojp5+jo6Ojp6urr1tnbwdHc0dDQ6+zt6uvr2dnauszZ7Ovr
+6uvs6uvs6evs6Orr7e7v0tTV6+3u6evs6evs5+nq5efo5efo5efo5efo5efo5ebo5efo5ebo
+5ebo5ebo5ebo5ebn5ebo5Obo5Obo5Obo5Obo4+Xn8/Hw////0NDQ////////////////////
++Pn9vLm7x8bExcHA/f38////////////////////ubm57u7t6ejo////////////////////
+////////////6+vq////////////////////////////////////////////////////////
+/////////////////////////////////////////Pz83Nzc4+PjyMjI0tLS4+Pj4uHhzc7N
+3Nzc6enp3d3dxsbG2tra4+Pj2NjYw8PD////////////6Ojo5+fn5ubm+Pj4////////////
+////6urq/////////////////////////////////////////////////////Pv6093j0dzj
+0dzjztjexdPcv9HdsMfWytrl////////////////////////////////////////////////
+////////////////////////////////////////////////8PDw5ubm5ubm7+/v////6enp
+////////////////////////////////////////////////////6+rp2On13ez11eTv2ujy
+1Oj0x+Hzt9juq8zh////////////////////////////////////////////////////////
+////////////////////////////////////////////////////+vr63t7e7Ozs////////
+////////////////////////jIyMn5+f////////////4N/e2uv20+Hqytjix9PbwNPfudDf
+q8fcq8re////////////////////////////////////////////////////////////////
+7evqzt3o0uDqx9Tdv8vVsMHMtMvasdHno7/S////////////6Ojo7Ozs////////////////
+////////////jY2NAAAAAAAAqamp8vLy6Ojo7ezrytbfz93mzNrjz9zkzN7pwtnostDlscbU
+////////////////////////////////////////////////////////////////7uzrw9Pe
+xtTczNfhu8rTucnSwNrprMreoLvO////////////6Ojo7Ozs////////////////////////
+////p6enAAAAAAAAvr6+7e3t////////////////////////////////////////////////
+////////////////////////////////////////////////////////7Orq1OXwx9bhsLrC
+tsLJus3anrPArMvfqsjd////////////6+vs8fHx////////////////////////+/v7////
+wsLC0tLS////////6Ojo4eDg097lz9zk0NvjzNfew9LcvNDdrMXXxdjk////////////////
+////////////////////////////////////////////////8/Lx1uDn1d/m1t/l4Onwz9vj
+zt/qwtjntMfV+vj26evrzM3O0c/NvL27ysbM2tvX////////ra2t+/v75ubm////////////
+////////////7Ozr1un21OHp1eTu1+Tuz+PwwdnpstLopcPW////////////////////////
+////////////////////////////////////////////////////4eHi3Nza6+rq5uPg////
+////9fX16Ojo8/T0Z21y0NHS////////////T09PAAAAAAAA////////////////////////
+////6+vqy9vn1eLszNzl0NzmzN7pudHir87kqcjb////////////////////////////////
+////////////////////////////////////8fHy1dTT0tHP3dzc0dDO1NPR1dLP///+////
+////dnZ1zPb/W2Zt9fTz6Ojo/Pz8LS0tAAAAAAAA////////////////////////////+Pf3
+zNff0d7nztrj0Nzkzt7pxdvottLlt8rX////////////////////////////////////////
+////////////////////////9fT02+Po6vL45Ozx4ejt5fD31+Pszt/qwdDa6+no5ubm////
+bG5v5+fo////////////////bW1tz8/P7e3t8PDw////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+////////////////7Orp3e/6YWhtxdPd9P//cHuD1PD/weX+rMzi////////////8/Pz////
+////////////////////////////+fj309PS5+fm4uHg4eDf4uDg4uDf5+Xk////////////
+////////////////////////////////////////////////////////////////////////
+////////7Oro5Pb/9v//Gx0eAQEBW2NpHCAi0/f/sM3j////////////6Ojo////////////
+////////////////////2d/j4fP/5/j/5vf/5ff/2PH/yun/s978ztjf////////////////
+////////////////////////////////////////////////////////////////////////
+6ujn1efz2Ojz6vv/7v//3vX/vtrsfJirpsbd////////////6Ojo////////////////////
+////////////09rfusbQuMXPw8zTusnTrb3HrMXYk7TH1ODo////////////////////////
+////////////////////////////////////////////////////////////////////9vTz
+9/X09/X09/X0+Pb0+/n3//z6/vr4////////////4uLi////////////////////////////
+////2+Pn5/n/6Pj/5/f/5fb/2fH/y+n+ueP/ztvk////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+////////////////////////7+/v4+Pj+Pj4////////////////////////////////8vLz
+2N7i1Nre2+Hl3+Xo2ODl1+Hoy9ni7/Dw////////////////////////////////////////
+////////////////////////////9PT00NDQ0tLSzMvL5+fm6ejo1dPR0NDP7erp6ejozczM
+1dTU6ejoz87O6unp/Pv6////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+////////////////////5+fn9/f2////5Ont6O3x0NTWpMHU7/HxpMDTys7S3eLl5ert4ujs
+t7/D5ezx3+fs3eXr3OTq3OXr2uTq2OLo1uDm1t/m1d/m1N/m097m097m0t7m0d7l0d3l0N3l
+zdvk6Ovt////////////////////////////////////////////////////////////////
+////////////7u7u/Pv6yNDXvczVsb7G0t/nl6Cn9P//mKClwdHasr7EwtHc3vD8rb7KsMTU
+sMLOrcLPtc3gpr/NrcTRt9Pkyen9x+f9xeb7w+X7weP7vuL7vOH8uuH6t+D6tN34s976nsTe
+////////////////////////////////////////////////////////////////////////
+////6Ojo9/b13OXr2Ofzp7S+v8nNxtTez97oxNPescDKrLvFx9vo1ej0wdLetsjXu8vat8zc
+uM7anbPC1fH/zuv9wN3xs87hss7hsc7hr83hrczhrMviqsvgrtHnuuH6tt75ocfg////////
+////////////////////////////////////////////////////////////////////3d3d
+8fDw3OTqzNvk7v7/6vv/4vb/2vL/0/D/zu3/x+r/vuX/psnhzN3ot8bPytrjvNDdxd7ww9Pd
+w9Xgw9/x1+Ts7/3/6Pj/4PX/2vL/0+//yur+xun/ttv0psnguOD7ocfg////////////////
+////////////////////////////////////////////////////////////6urq+Pf32+Pp
+0eDpwtHaqbO9qbjBpLXBoLTBpL3PobzNmrjMqM3mjJef0OLuwdPg0ePwqcXXxNrowdnphZej
+2OXurrnBqLXArrzFnrG/n7LAqsTVkKi7n7/SqMvjuOD7ocfg////////////////////////
+////////////////////////////////////////////////////7u7u/fz73+br3ez30+Hq
+1uXux9bgz+HswtXhscTRo7jGt8/gzOHvsL/K3fL/2/L/pbjE0en50ev7zur7zuv+wtPfz+Dr
+yt3qxdvpvdTkvNfptdLlstLnqcvir9TsuOD6ocjh////////////////////////////////
+////////////////////////////////////////////6enp3tzcpcLVq7W82efx1OLs0+Hq
+7f3/0+Dqy9nhvsvU2uv24fT/vc7a2e/91+79t8vYy+T10e3+zuv9zev+yej8x+X7xeX5xeb8
+rs3hw+b+wOP8vuP7veL7uuH6t9/6ocPZ7u/w////////////////////////////////////
+////////////////////////////////////39/f7ezrtb7FuMfRu8fMxtTdu8fOvsvT0d7o
+0uHqzt7o3/L+3fD9wdLe2/D/1+7+xNrpvcfRv8nSvsrRtb7EzuLuyuj9x+X5yej+utnustHm
+sdDmrtDlrc/lrM/mmbvRlay81uDn////////////////////////////////////////////
+////////////////////////////7u7u5uXlr8fXoqyzztvkz93mx9Td0d/o1+bv0N/ozdzm
+3/H93vH/t8jUxtfizd3oxNXgx9zqwtnovdfoudbpstDlrMvgvNvvs8DKwc7UucPMvMnSucHK
+w9HYxtLbvcrUr8LN////////////////////////////////////////////////////////
+////////////////////7u7u//795uvww9Ldx9TbzNrjytfevszW5PH50N/ozdzm3/H94PT/
+mqiz5/b/2ebv0eHs0OLtzeP0xN3vuNTnt9juttrzq8vhyOj+wuT7wOP8vuL8vOP7ueD6tt/6
+tuD8oMji////////////////////////////////////////////////////////////////
+////////////6Ojo3dzbor7R2ebv1ePt1ePt1uTt1uTt0uDqwc/Xzt7n3/H93vH+u83Zy9nk
+ytXbws/ZvM3XuMzcscnZss3flbHFqMneq8rexuX6wuL4wOH4vt/4vOD2ut/3uN73tt75ocfg
+////////////////////////////////////////////////////////////////////////
+////3t7e9PPy0dXaxdLcxtPewM3UvMnRwc/Z09/o6vr/y9vl3/H93fD9wtTg0eb0yt/tna+6
+uc7dwtvqvdbmu9Xmutbnt9Lkyuj8xOP4wuL4wOH4vt/4vOD2ut/3uN73tt75ocfg////////
+////////////////////////////////////////////////////////////////////7+/v
+4d/fo8DUz9zlydbex9Te0N7n1+Xv0+LrzdzlwdDa3/H+3vL/s8LO3fP/yNzqrsHMwtfmwdnn
+0Oz9zOn7yuj7yef7xuT3xOP4wuL4wOH4vt/4vOD2ut/3uN73tt75ocfg////////////////
+////////////////////////////////////////////////////////////7e3t/v38z9TZ
+1ebw1OLru8fQw8/Ywc3Vy9nj6Pj/5vj/4PL+4fX/qrnE4/r/eIOKprXAcn2ErMDM0Oz9y+f5
+yOb5yOX5xuT3xOP4wuL4wOH4vt/4vOD2ut/3uN73tt75ocfg////////////////////////
+////////////////////////////////////////////////////9fX11dTUsri9vcnS0N3n
+xNDalZ6mqrW9t8LKxtXdrbvDusnTxdbivM3Z3vP/xdvo2PD/wdbm0ev8z+r7zOn7yuj7yef7
+x+b6xeX6wuL4wOH4vt/4vOD2ut/3uN73tt75ocfg////////////////////////////////
+/////////////////////////////////////////////////fz7u8vW2efw1ePt1uTu2+nz
+2Obv4fD65PX/4/T/4vT/zd/ryNvnxdjltMfT2O//vtTjvdXjutPjudLjt9HjttDjtM/hsc3g
+vN3zweT9vuL8uuH5uuH7t974tt75ocfg////////////////////////////////////////
+////////////////////////////////////////9PPytMfUwdDcv8rOxNLdusbMv8zU0+Hr
+4/P93/D73vH9yNnl4PX/3PL/2vH/1+7/1u//0Ov7zur7zOn7yuj7yef7x+b6x+f+tMbTvsjQ
+uMPLydfgtr/EwNbltt/6ocfg////////////////////////////////////////////////
+////////////////////////////////////3+fst8XP0N3mu8jQwMvVytbdsr3F6vr/5PT/
+5Pb/vs3ZvcbMtsLLw8/XsbzDtb/D1e7/zOf4y+f5yef7x+X7xeX5xef+rsHMuMHLxtLZxtDW
+x+b6uOD6tt75ocfg////////////////////////////////////////////////////////
+////////////////////////////2ODm5/j/5/f/0t/p0+Hq1OPtvs/au8/cscXTtMzcttHk
+sNHmvNXm2vD/1u7/0+z/zun4zej5yOX4wdLdzd3nydvnxdrnvNTlu9jrtNTprtHopcffrtPr
+t9/6ocfg////////////////////////////////////////////////////////////////
+////////////////////2ODm5fT/5vX/0N7m5/j/ytbgssTRmKavnbHAqb/PrMndv+X+psrh
+2e780+r60ej6z+n4zun7t8/g7vz/2Obxws/Yvc/bw9nnt8/grcjZrcvfvuX/pcffuOD7ocfg
+////////////////////////////////////////////////////////////////////////
+////////////2eLo2enz3ez0xNHa4vL+y9jhxtnlw9nnvdbnrcjar8zitt33qMTY2e790+r6
+0ej6z+n4zej6wt3v0t/nz9vm0N3mydzoxdnnts3ftdDhsdHnsNTtp8rit+D7ocfg////////
+////////////////////////////////////////////////////////////////////////
+////2d/kv83XsLzE0+Dow9DYxtPc1uPry9nioq211ubx0ODrzN3o3PD+1ev60+r60ej6z+n4
+zej5zOj6w+H1uNTot9ToudjthJysrs7ju9fruNXou9ruxef9wOH4o8ni////////////////
+////////////////////////////////////////////////////////////////6ejnnbvO
+v8zUu8fRvsrRt8TLuMTNytfg0N/o1ebw4PL+3O/82u771+z61ev60+r60ej6z+n4zej5y+f5
+yeb5yeb6x+X5x+b8s9Hkxen/u8vVu8zZvs/as8TPscHOr8nY4Obq////////////////////
+////////////////////////////////////////////////////////////09ne6Pj/5/b/
+5vb/5/b/5/b/5vX/4vP94PH83e/72+773PD92e782vD/1u7+1e3/0+7+0Ov8z+z/y+n9yOX5
+xuT3xOP4v970rcvgrc7lq87kqc3kqM3lps3nnLvP4ufr////////////////////////////
+////////////////////////////////////////////////////1d3i4/T/4vP94vP94vP9
+4vP94vP+4PH83vD82+/83PH/uMzamqu2oLPBrsPRp7vJm7LCrcfXkqi5pr/PyOj+wuP5wOL5
+vuL6veL7u+H7ueH6t+D6td/6s9/8ocXf////////////////////////////////////////
+/////////////////////////////////////////////v385Obo5ujq5ujq5ujq5ujq5ujq
+5ujq5ujq5ujq5ejq6Ovt6u7w6e3v6Ovu6Ozv6O3v5+vt6O3w5urt4+fp4ufp4ubp4ubp4ubp
+4ebp4ebp4ebp4ebp3uTo9/b1////////////////////////////////////////</Image></Logo><UMLProfiles><UMLProfile profiletype="uml2">
+			<Documentation id="2A652B34-3" name="Hazard Relation Diagram" version="1.3" notes="Hazard Relation Diagram"/>
+			<Content>
+				<Stereotypes>
+					<Stereotype name="Hazard" metatype="Hazard" notes="" cx="90" cy="70" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+						<Image type="EAShapeScript 1.0" xmlns:dt="urn:schemas-microsoft-com:datatypes" dt:dt="bin.base64">UEsDBBQAAAAIAD4YP0ZlowlJPAEAAGgDAAAHABEAc3RyLmRhdFVUDQAHi0XMVItFzFSLRcxU
+lZPfTsJQDMa/W018BzJvMCHxD0okitde6DOYyQYj4iBjaILx3f2127Ih2wVp2nN22q/9Tk+3
+UaJQa8Xq6ZPdQql+dKZTXSKpVtp4RMTuWxPlyrQl+sFjInYzIhbasevrXlca6BZ7UUZYlg2o
+EFxOnRCbELnvjzmdkWWJTKm0RDOibnSHDP6tFTYDN/XcqeZgjIHVN73G1muzWlXHUJFzy6j2
+AfqQXRfznntfwX059xXnY69Xs3vxXlbekfO3/rT7h4ihu/x2j4HXaPcP3W9Z2v2jkt24cbeu
+rlc9rGuduDWNvWtt3TA9premNlcWt9V7OWc2iX0F5VnQeMn9l61vUc9vgSmmN9Eb50v4zOEy
+IdPUuefYjK/qXmu+rE85salXfkSewe785SM9IUGjE4eIc9aQvydm14z89bWwf1BLAQIXCxQA
+AAAIAD4YP0ZlowlJPAEAAGgDAAAHAAkAAAAAAAAAAAAAgAAAAABzdHIuZGF0VVQFAAeLRcxU
+UEsFBgAAAAABAAEAPgAAAHIBAAAAAA==</Image>
+						<AppliesTo>
+							<Apply type="Class">
+								<Property name="isActive" value=""/>
+							</Apply>
+						</AppliesTo>
+					</Stereotype>
+					<Stereotype name="Hazard Association" metatype="Hazard Association" notes="" cx="90" cy="70" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+						<AppliesTo>
+							<Apply type="Association">
+								<Property name="compositionKind" value="none"/>
+								<Property name="direction" value="Unspecified"/>
+							</Apply>
+						</AppliesTo>
+					</Stereotype>
+					<Stereotype name="Hazard Relation" metatype="Hazard Relation" notes="" cx="90" cy="70" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+						<Image type="EAShapeScript 1.0" xmlns:dt="urn:schemas-microsoft-com:datatypes" dt:dt="bin.base64">UEsDBBQAAAAIAMp7YUZ5pPRShQAAAB4BAAAHABEAc3RyLmRhdFVUDQAHjTDzVI0w81SNMPNU
+hY7BCoJAFEXPOugfWhbMQsUIiT5G1GjAShwlKPx374yaq4jhvneZd96dcdzIaajYcZezPPiw
+ZaP+xIVpKffiQkdLL/Ic5qXcVYTlLbcnJcKEepgJp/tOjKXWKZRSS61YT05a2CowVj/xWysR
+q679f3LCUTJSOveE089XfOqUbci+daEHRlBLAQIXCxQAAAAIAMp7YUZ5pPRShQAAAB4BAAAH
+AAkAAAAAAAAAAAAAgAAAAABzdHIuZGF0VVQFAAeNMPNUUEsFBgAAAAABAAEAPgAAALsAAAAA
+AA==</Image>
+						<AppliesTo>
+							<Apply type="n-ary Association"/>
+							<Apply type="MergeNode"/>
+						</AppliesTo>
+					</Stereotype>
+					<Stereotype name="Mitigation Partition" metatype="Mitigation" notes="" cx="90" cy="70" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+						<Image type="EAShapeScript 1.0" xmlns:dt="urn:schemas-microsoft-com:datatypes" dt:dt="bin.base64">UEsDBBQAAAAIANYbP0a3VsI++AAAABgDAAAHABEAc3RyLmRhdFVUDQAHU0zMVFNMzFRTTMxU
+hVLbCoJQEJzXgv4h9KUgyIggiL4lKiWDNEkrKvr3Zs/JPBcrRM9lZ2dm3S2RYo0CCfrIuNsj
+xwM9dNHBmE+GIy6MVlwHiDDCBDMMsTAwB5VVYyQ+IrLBlCpWo0rubzwlxAaIqVnSQ+DhxVOO
+K7NinlKipwbmn68NY3fmJjg5GPGmX9+pXcnci/usNUbYIoNZ721P7n/SGGH4pWDiTGb/9rtS
+G6ZNyVRwa7J92gpurV31XbNzMbt5ppb0WM+ZdF3fBY6CvA1Hk9F/4/VcpljxXvR3dLAky1ZN
+SqUqCT4OC57Eo0xerlRDNXuCSuhaplDYQ2v2nmp94gVQSwECFwsUAAAACADWGz9Gt1bCPvgA
+AAAYAwAABwAJAAAAAAAAAAAAAIAAAAAAc3RyLmRhdFVUBQAHU0zMVFBLBQYAAAAAAQABAD4A
+AAAuAQAAAAA=</Image>
+						<AppliesTo>
+							<Apply type="ActivityRegion"/>
+						</AppliesTo>
+					</Stereotype>
+					<Stereotype name="Safety Goal" metatype="Safety Goal" notes="" cx="90" cy="70" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+						<Image type="EAShapeScript 1.0" xmlns:dt="urn:schemas-microsoft-com:datatypes" dt:dt="bin.base64">UEsDBBQAAAAIAK6SO0bSM/8sGwEAAAgDAAAHABEAc3RyLmRhdFVUDQAHI9fHVCPXx1Qj18dU
+tZLdSsNAEIXPrYLvEJKbKIGqKBSqvoAPIbGpNhiTkmwVFd/dbza/1F7oRRl2dnb2nPnbbbRW
+qo1WCvSKlavUl050jP+Bc4HnGd+tQi1BlXLomtPCo97+hDoiQ+1jO7ClYm5ukEhNh1ypwvrw
+lUS6Q0KdDux9/Ig9pWbDT7EWMQXt4KToNej+doaUZGp81xnWOzU70FvitJgM6wlErk+sWHOd
+K9EVehql4c6By6mnoOcKXREn1qWukWRn77nW6dJXWDKxwmew+LYu0ONuDMt0T9wNmYxty6ab
+7fQWDLe2+qosR+bnURPjBebvibT9nPlpGHarx2469hI259YX+k6sunEeyaSvkRN0jP/8on3v
+e5j/0eK/6Xg22Lb/AFBLAQIXCxQAAAAIAK6SO0bSM/8sGwEAAAgDAAAHAAkAAAAAAAAAAAAA
+gAAAAABzdHIuZGF0VVQFAAcj18dUUEsFBgAAAAABAAEAPgAAAFEBAAAAAA==</Image>
+						<AppliesTo>
+							<Apply type="Class">
+								<Property name="isActive" value=""/>
+							</Apply>
+						</AppliesTo>
+					</Stereotype>
+					<Stereotype name="Trigger Condition" metatype="Trigger Condition" notes="" cx="90" cy="70" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+						<Image type="EAShapeScript 1.0" xmlns:dt="urn:schemas-microsoft-com:datatypes" dt:dt="bin.base64">UEsDBBQAAAAIAIIcP0Y3kARlMQEAALYDAAAHABEAc3RyLmRhdFVUDQAHoU3MVKFNzFShTcxU
+jZLtSsMwFIbfvwrew6g/nCCoqDCQXYUXINF2dmzrxtpNnHjvPidt17RdRUKSk5znfCa5Ujlt
+lGikFdJcmb51oXP2tV68Nkb6RD9lFtpqB/3smVSv6JdYfcBPFekdXQaVwEUVtf8XdcbYcLYM
+CuhMY3SX7I7MEqRI10c2h3HQBTaONYWutbeMGIsZ1FwHpLEmutONHllrKufe4li8xPv74mTs
+FdaOmxQp9LmlDzvoGCmhhgLWvNq8Z23vT9Xa5Gw+hqNGx6hhnY2NvVHGO8zhynofAm5FbnvP
+raus2rHf0B2wtY63mTL/8NRY1XmWFpOevu+1ZppOdLsy5L1mzMNfEUKu3/fwdjjSKeZUpDBC
+t6Z2nu0I3Vpt2uvFnd868poZtkuG84T9CftpCyz6f/vHr79QSwECFwsUAAAACACCHD9GN5AE
+ZTEBAAC2AwAABwAJAAAAAAAAAAAAAIAAAAAAc3RyLmRhdFVUBQAHoU3MVFBLBQYAAAAAAQAB
+AD4AAABnAQAAAAA=</Image>
+						<AppliesTo>
+							<Apply type="State">
+								<Property name="isComposite" value=""/>
+								<Property name="isOrthogonal" value=""/>
+								<Property name="isSimple" value=""/>
+								<Property name="isSubmachineState" value=""/>
+							</Apply>
+						</AppliesTo>
+					</Stereotype>
+					<Stereotype name="Trigger Condition Conjunction" metatype="Trigger Condition Conjunction" notes="" cx="90" cy="70" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+						<Image type="EAShapeScript 1.0" xmlns:dt="urn:schemas-microsoft-com:datatypes" dt:dt="bin.base64">UEsDBBQAAAAIAFhcUEaaeLfJvAAAANQBAAAHABEAc3RyLmRhdFVUDQAHtNXhVLTV4VS01eFU
+fVBdC8IwDLxnwf+wxwl7cDIREX+MuKnFWUdbERT/u9d0dXMTCfmA3CWXWJywQ4MKCS6sFDSe
+mGLCfIWVbsnqji0cDG5EbqRfsjoQofBglaLAHJnEWYuoUNMUp1tB+L73nLHLEe0xjhOVsPbc
+WdMNeQssadkgdzxHjYaxYXZUnA5m+us0L1DUHPp+c8T83x0196/SnPO9K/koMeSdiRlrUfLf
+o3wipxXtB8I9Gd3Xq95lvxgBFRjrEeMl8Q1QSwECFwsUAAAACABYXFBGmni3ybwAAADUAQAA
+BwAJAAAAAAAAAAAAAIAAAAAAc3RyLmRhdFVUBQAHtNXhVFBLBQYAAAAAAQABAD4AAADyAAAA
+AAA=</Image>
+						<AppliesTo>
+							<Apply type="Junction"/>
+						</AppliesTo>
+					</Stereotype>
+					<Stereotype name="Trigger Condition Disjunction" metatype="Trigger Condition Conjunction" notes="" cx="90" cy="70" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+						<Image type="EAShapeScript 1.0" xmlns:dt="urn:schemas-microsoft-com:datatypes" dt:dt="bin.base64">UEsDBBQAAAAIACRfUEYjqS842wAAAGgCAAAHABEAc3RyLmRhdFVUDQAHDtvhVA7b4VQO2+FU
+lZHrCoJAEIXP76B38GdBUJlWEL1EbyBquWRrqBUUvXtnxsJLUcSys4PzzZmLBRIEOCKGgwM9
+A4sb+ujxzVBoNKJ3wRolcpxIrjQe0duSMLjSG8DDBCO1wycRI+UxVC+UkLjcKW39vmhhSioa
+zQpZM+XNG3k1O+YpSAeMl9QPaBOS7bjoyWSW3Rv2WzFStckdWOWsbKZTzFjJhd9iZArbYZZf
+dXwsfupUTFfn3z3IfFFnB05rSznz9+Te97Th11D3aLFjnfo/umo99igd1lN8yvCVqjLmapsZ
+d7UPUEsBAhcLFAAAAAgAJF9QRiOpLzjbAAAAaAIAAAcACQAAAAAAAAAAAACAAAAAAHN0ci5k
+YXRVVAUABw7b4VRQSwUGAAAAAAEAAQA+AAAAEQEAAAAA</Image>
+						<AppliesTo>
+							<Apply type="Junction"/>
+						</AppliesTo>
+					</Stereotype>
+				</Stereotypes>
+				<TaggedValueTypes/>
+			</Content>
+		</UMLProfile>
+	</UMLProfiles><DiagramProfile><UMLProfile profiletype="uml2">
+			<Documentation id="D380B905-1" name="Hazard Relation Diagram" version="1.3" notes="Hazard Relation Diagram"/>
+			<Content>
+				<Stereotypes>
+					<Stereotype name="Hazard Relation Diagram" notes="" cx="90" cy="70" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+						<AppliesTo>
+							<Apply type="Diagram_Dynamic">
+								<Property name="alias" value="Hazard Relation Diagram"/>
+								<Property name="toolbox" value="Hazard Relation Diagram"/>
+							</Apply>
+						</AppliesTo>
+					</Stereotype>
+				</Stereotypes>
+				<TaggedValueTypes/>
+			</Content>
+		</UMLProfile>
+	</DiagramProfile><UIToolboxes><UMLProfile profiletype="uml2">
+			<Documentation id="B882DF4C-D" name="Hazard Relation Diagram" version="1.3" notes="Hazard Relation Diagram"/>
+			<Content>
+				<Stereotypes>
+					<Stereotype name="Activity Diagram Associations" notes="" cx="90" cy="70" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+						<AppliesTo>
+							<Apply type="ToolboxPage"/>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="UML::ControlFlow" type="" description="" unit="" values="" default="Activity Edge"/>
+						</TaggedValues>
+					</Stereotype>
+					<Stereotype name="Activity Diagram Elements" notes="" cx="90" cy="70" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+						<AppliesTo>
+							<Apply type="ToolboxPage"/>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="UML::Action" type="" description="" unit="" values="" default="Action"/>
+							<Tag name="UML::Activity" type="" description="" unit="" values="" default="Activity"/>
+							<Tag name="UML::ActivityFinal" type="" description="" unit="" values="" default="Activity Final"/>
+							<Tag name="UML::ActivityInitial" type="" description="" unit="" values="" default="Activity Initial"/>
+							<Tag name="UML::Decision" type="" description="" unit="" values="" default="Decision"/>
+							<Tag name="UML::ExitPoint" type="" description="" unit="" values="" default="Exit Point"/>
+							<Tag name="UML::ForkJoinV" type="" description="" unit="" values="" default="ForkJoin"/>
+							<Tag name="UML::MergeNode" type="" description="" unit="" values="" default="Merge"/>
+							<Tag name="UML::Port" type="" description="" unit="" values="" default="Input Pin"/>
+						</TaggedValues>
+					</Stereotype>
+					<Stereotype name="Hazard Relation Diagram Associations" notes="" cx="90" cy="70" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+						<AppliesTo>
+							<Apply type="ToolboxPage"/>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="Hazard Relation Diagram::Hazard Association(UML::Association)" type="" description="" unit="" values="" default="Hazard Association"/>
+							<Tag name="Hazard Relation Diagram::Hazard Relation(UML::MergeNode)" type="" description="" unit="" values="" default="Hazard Relation"/>
+						</TaggedValues>
+					</Stereotype>
+					<Stereotype name="Hazard Relation Elements" notes="" cx="90" cy="70" bgcolor="-1" fontcolor="-1" bordercolor="-1" borderwidth="-1" hideicon="0">
+						<AppliesTo>
+							<Apply type="ToolboxPage"/>
+						</AppliesTo>
+						<TaggedValues>
+							<Tag name="Hazard Relation Diagram::Hazard(UML::Class)" type="" description="" unit="" values="" default="Hazard"/>
+							<Tag name="Hazard Relation Diagram::Mitigation Partition(UML::ActivityRegion)" type="" description="" unit="" values="" default="Mitigation Partition"/>
+							<Tag name="Hazard Relation Diagram::Safety Goal(UML::Class)" type="" description="" unit="" values="" default="Safety Goal"/>
+							<Tag name="Hazard Relation Diagram::Trigger Condition Conjunction(UML::Junction)" type="" description="" unit="" values="" default="Trigger Condition Conjunction"/>
+							<Tag name="Hazard Relation Diagram::Trigger Condition Disjunction(UML::Junction)" type="" description="" unit="" values="" default="Trigger Condition Disjunction"/>
+							<Tag name="Hazard Relation Diagram::Trigger Condition(UML::State)" type="" description="" unit="" values="" default="Trigger Condition"/>
+						</TaggedValues>
+					</Stereotype>
+				</Stereotypes>
+				<TaggedValueTypes/>
+			</Content>
+		</UMLProfile>
+	</UIToolboxes></MDG.Technology>

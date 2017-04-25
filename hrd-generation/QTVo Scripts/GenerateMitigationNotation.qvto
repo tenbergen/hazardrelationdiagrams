@@ -1,0 +1,514 @@
+modeltype UML uses 'http://www.eclipse.org/uml2/5.0.0/UML';
+modeltype MT uses 'http://www.paluno.de/hazardmitigation';
+modeltype NOTATION uses 'http://www.eclipse.org/gmf/runtime/1.0.2/notation';
+modeltype ECORE uses "http://www.eclipse.org/emf/2002/Ecore";
+
+transformation grafic_for_mitigations(in ad:UML, inout notation:NOTATION, in change:MT);
+property diagram:NOTATION::Diagram=null;
+property rootnode:NOTATION::DecorationNode=null;
+property wert1: Integer=20;
+property wert2: Integer=400;
+property counter: Integer=1;
+
+main() {
+	notation.objectsOfType(NOTATION::Diagram)->forEach(d){ diagram:=d};
+	notation.objectsOfType(NOTATION::DecorationNode)->forEach(dn){ if dn.type="7004" then rootnode:=dn endif; };
+	deleteunusedshapes();
+	rootnode.children+=change.objectsOfType(InsertActivity)->map OpaquetoShape();
+	// add in and output port to shapes
+	var list:Set(Pin)=getPinsnotinNotation();
+	list->forEach(p)
+	{
+		var activity:OpaqueAction=p.getOpaqueAction();
+		notation.objectsOfType(NOTATION::Shape) ->forEach(s)
+		{
+			if s.type="3007" then
+				if s.element.toString()=activity.toString() then s.children+= p->map PintoShape()
+				endif
+			endif;	
+		};
+	};
+	//
+	notation.objectsOfType(NOTATION::Shape) ->forEach(s)
+	{
+		if s.type="2001" then s.children+= change.objectsOfType(MT::InsertPin)->map ParameterNodetoShape()endif;
+	};
+	
+	rootnode.children+=change.objectsOfType(MT::InsertControlNode)->ControlNodetoShape();
+	var subCN:=change.objectsOfType(MT::SubstituteControlNode);
+	subCN->forEach(s)
+	{
+		rootnode.children+=s->map replaceControlNode()
+	};
+		
+	diagram.edges+=change.objectsOfType(MT::InsertActivityEdge)->map addActivityEdge();
+	var subAE:=change.objectsOfType(MT::SubstituteActivityEdge);
+	subAE->forEach(s)
+	{
+		s.replaceActivityEdge()
+	};
+	deleteunusedshapes();
+}
+
+mapping InsertActivity::OpaquetoShape(): NOTATION::Shape
+{
+	type:="3007";
+	var decnode:notation::Node:= object DecorationNode{type:="5003"};
+	children+=decnode;
+ 	var style:notation::Style := object HintedDiagramLinkStyle{};
+  	styles:=style;
+	element:=self.getOpaqueAction().oclAsType(ecore::EObject);
+ 	var bound:notation::LayoutConstraint := object Bounds{x:=wert1; y:=wert2};
+  
+	if counter.toString()="4" then (wert1:=20 ) else wert1:=wert1+200 endif;
+ 	if wert1.toString()="20" then wert2:=wert2+200 endif;
+ 	counter:=counter+1;
+	layoutConstraint:=bound;
+}
+
+mapping Pin::PintoShape():NOTATION::Shape
+{
+	if self.incoming->isEmpty() then type:="3014"
+	else if self.outgoing->isEmpty() then type:="3013" endif endif;
+	
+	var decnode:notation::Node:= object DecorationNode{type:="5009"};
+	var bound:notation::LayoutConstraint := object Location{};
+  	decnode.layoutConstraint:=bound;
+	children+=decnode;
+	
+	var decnode2:notation::Node:= object DecorationNode{type:="5085"};
+	var bound2:notation::LayoutConstraint := object Location{};
+  	decnode2.layoutConstraint:=bound2;
+	children+=decnode2;
+	var style:notation::Style := object HintedDiagramLinkStyle{};
+  	styles:=style;
+  	element:=self.oclAsType(ecore::EObject);
+  	var bound3:notation::LayoutConstraint := object Bounds{};
+  	layoutConstraint:= bound3;
+
+}
+
+mapping InsertPin::ParameterNodetoShape(): NOTATION::Shape
+{	
+
+	type:="3059";
+	
+	var decnode:notation::Node:= object DecorationNode{type:="5071"};
+	decnode.element:= self.getPin().oclAsType(ecore::EObject); 
+	children:=decnode;
+	var style:notation::Style := object HintedDiagramLinkStyle{};
+  	styles:=style;
+  	var bound:notation::LayoutConstraint := object Bounds{x:=-20; y:=wert1};
+  	layoutConstraint:=bound;
+  	element:= self.getPin().oclAsType(ecore::EObject);
+  	wert1:=wert1+40;    
+};
+
+mapping InsertControlNode::ControlNodetoShape():NOTATION::Shape
+{
+	if self.nodeType="Decision" then type:="3038" 
+	else if self.nodeType="Merge" then type:="3039" 
+	else if self.nodeType="Fork" then type:="3040" 
+	else if self.nodeType="Join" then type:="3041" 
+	endif endif endif endif;
+	
+	var decnode:notation::Node:= object DecorationNode{};
+	var bound:notation::LayoutConstraint := object Location{};
+  	decnode.layoutConstraint:=bound;
+  	decnode.element:=getControlNode(self.NodeName).oclAsType(ecore::EObject);
+  	if type="3038" then decnode.type:="5043" 
+  	else if type="3039" then decnode.type:="5099" 
+  	else if type="3040" then decnode.type:="5100" 
+  	else if type="3041" then decnode.type:="5042" 
+  	endif endif endif endif;
+  	
+	children+=decnode;
+	if type="3038" or type="3041"	
+	then 
+	{
+	var decnode2:notation::Node:= object DecorationNode{};
+	var bound2:notation::LayoutConstraint := object Location{};
+  	decnode2.layoutConstraint:=bound2;
+  	decnode2.element:=getControlNode(self.NodeName).oclAsType(ecore::EObject);
+  	if type="3038" then decnode2.type:="5098" else decnode2.type:="5101" endif;
+	children+=decnode2;
+	} endif;
+	
+	var style:notation::Style := object HintedDiagramLinkStyle{};
+  	styles:=style;
+  	element:=getControlNode(self.NodeName).oclAsType(ecore::EObject);
+  	var bound3:notation::LayoutConstraint := object Bounds{x:=wert1; y:=wert2};
+  	layoutConstraint:=bound3;
+	if counter.toString()="4" then (wert1:=20 ) else wert1:=wert1+200 endif;
+ 	if wert1.toString()="20" then wert2:=wert2+200 endif;
+ 	counter:=counter+1;
+	
+}
+
+mapping MT::SubstituteControlNode::replaceControlNode():Shape
+{
+
+	if self.newNodeType="Decision" then type:="3038" 
+	else if self.newNodeType="Merge" then type:="3039" 
+	else if self.newNodeType="Fork" then type:="3040" 
+	else if self.newNodeType="Join" then type:="3041" 
+	endif endif endif endif;
+	
+	var decnode:notation::Node:= object DecorationNode{type:="5042"};
+	var bound:notation::LayoutConstraint := object Location{};
+  	decnode.layoutConstraint:=bound;
+	children+=decnode;
+		
+	var decnode2:notation::Node:= object DecorationNode{type:="5042"};
+	var bound2:notation::LayoutConstraint := object Location{};
+  	decnode2.layoutConstraint:=bound2;
+	children+=decnode2;
+	
+	var style:notation::Style := object HintedDiagramLinkStyle{};
+  	styles:=style;
+  	element:=getControlNode(self.newNodeName).oclAsType(ecore::EObject);
+  	var bound3:notation::LayoutConstraint := object Bounds{x:=wert1; y:=wert2};
+  	layoutConstraint:=bound3;
+	if counter.toString()="4" then (wert1:=20 ) else wert1:=wert1+200 endif;
+ 	if wert1.toString()="20" then wert2:=wert2+200 endif;
+ 	counter:=counter+1;
+}
+
+helper MT::SubstituteActivityEdge::replaceActivityEdge()
+{
+	// suche Nachricht mit neuen Parametern
+	var objectflow:=self.getnewobjectFlow();
+	log(objectflow.toString());
+	notation.objectsOfType(NOTATION::Connector)->forEach(con)
+	{
+		if con.element.toString()=objectflow.toString() then
+		{
+			log(objectflow.source.toString());
+			log(objectflow.target.toString());
+			con.source:=getShape(objectflow.source);
+			con.target:=getShape(objectflow.target);
+		}
+		endif;
+	}
+}
+
+mapping MT::InsertActivityEdge::addActivityEdge():NOTATION::Connector
+{
+	var nodes:= notation.objectsOfType(Shape);
+	var sourceshape:NOTATION::Shape:=null;
+	var targetshape:NOTATION::Shape:=null;
+	var objectFlow:UML::ObjectFlow=self.getobjectFlow();
+
+	nodes-> forEach(n)
+	{
+		if objectFlow.source.toString() = n.element.toString() then sourceshape:=n endif;
+		if objectFlow.target.toString()= n.element.toString() then targetshape:=n endif; 
+	};
+
+	element:=objectFlow.oclAsType(ecore::EObject);
+	
+	target:= targetshape;
+	source:= sourceshape;
+	type:="4003";
+	var decnode:notation::Node:= object DecorationNode{type:="6001"};
+	var layout:notation::LayoutConstraint:= object Location{ };
+	decnode.layoutConstraint:= layout;
+	decnode.element:=objectFlow.oclAsType(ecore::EObject);
+	children+=decnode;
+	var decnode1:notation::Node:= object DecorationNode{type:="6002"};
+	var layout1:notation::LayoutConstraint:= object Location{};
+	decnode1.layoutConstraint:= layout1;
+	decnode1.element:=objectFlow.oclAsType(ecore::EObject);
+	children+=decnode1;
+	var decnode2:notation::Node:= object DecorationNode{type:="6005"};
+	var layout2:notation::LayoutConstraint:= object Location{};
+	decnode2.element:=objectFlow.oclAsType(ecore::EObject);
+	decnode2.layoutConstraint:= layout2;
+	children+=decnode2;
+	var decnode3:notation::Node:= object DecorationNode{type:="6006"};
+	decnode3.element:=objectFlow.oclAsType(ecore::EObject);
+	var layout3:notation::LayoutConstraint:= object Location{};
+	decnode3.layoutConstraint:= layout3;
+	children+=decnode3;
+	var decnode4:notation::Node:= object DecorationNode{type:="6007"};
+	decnode4.element:=objectFlow.oclAsType(ecore::EObject);
+	var layout4:notation::LayoutConstraint:= object Location{};
+	decnode4.layoutConstraint:= layout4;
+	children+=decnode4;
+	var decnode5:notation::Node:= object DecorationNode{type:="6008"};
+	decnode5.element:=objectFlow.oclAsType(ecore::EObject);
+	var layout5:notation::LayoutConstraint:= object Location{};
+	decnode5.layoutConstraint:= layout5;
+	children+=decnode5;
+	var decnode6:notation::Node:= object DecorationNode{type:="6010"};
+	decnode6.element:=objectFlow.oclAsType(ecore::EObject);	
+	var layout6:notation::LayoutConstraint:= object Location{};
+	decnode6.layoutConstraint:= layout6;
+	children+=decnode6;
+	var fontstyle:notation::Style:= object FontStyle{};
+	styles+=fontstyle;
+	var bends: Bendpoints:= object RelativeBendpoints{};
+
+	bendpoints:=bends; 
+
+}
+helper	MT::InsertActivity::getOpaqueAction():UML::OpaqueAction
+{
+	ad.objectsOfType(OpaqueAction)->forEach(oa)
+	{
+		if oa.name=self.activityName then {return oa; break;} endif;
+	};
+	return null;	
+}
+
+helper	MT::InsertPin::getPin():UML::ActivityParameterNode
+{
+	ad.objectsOfType(ActivityParameterNode)->forEach(pn)
+	{
+		if pn.name=self.pinName then {return pn; break;} endif;
+	};
+	return null;	
+}
+
+helper	getControlNode(str:String):UML::ControlNode
+{
+	ad.objectsOfType(ControlNode)->forEach(cn)
+	{
+		if cn.name=str then {return cn; break;} endif;
+	};
+	return null;	
+}
+
+helper	MT::InsertActivityEdge::getobjectFlow():UML::ObjectFlow
+{
+	ad.objectsOfType(ObjectFlow)->forEach(of)
+	{ 
+
+		if ((of.name.toString()="null"  and self.Message.toString()="null") or of.name=self.Message) then
+			if ((of.guard.name.toString()="invalid"  and self.Guard.toString()="null") or of.guard.name=self.Guard) then
+				if  of.source.isPin()=true then 
+				{
+					if of.source.getnameofopaqueaction()=self.SourceName then
+						if  of.target.isPin()=true then 
+							{if of.target.getnameofopaqueaction()=self.targetName then {return of;  break;} endif;}	
+						else if of.target.isPin()=false then
+							{if of.target.name=self.targetName then {return of;  break;} endif;}
+						endif endif endif;
+				}
+				else if  of.source.isPin()=false then
+				{			
+					if of.source.name=self.SourceName then
+						if  of.target.isPin()=true then 
+							{if of.target.getnameofopaqueaction()=self.targetName then {return of; break;} endif;}	
+						else if of.target.isPin()=false then
+							{if of.target.name=self.targetName then {return of ;break;} endif;}
+						endif endif endif; 
+				}
+					endif
+				endif
+			endif	
+		endif;	
+
+	};
+	return null;
+	
+}
+
+helper	MT::SubstituteActivityEdge::getnewobjectFlow():UML::ObjectFlow
+{
+
+	ad.objectsOfType(ObjectFlow)->forEach(of)
+	{
+
+		if (of.name.toString()=self.newMessage.toString()) then
+			if ((of.guard.toString()="null"  and self.newGuard.toString()="") or of.guard.name=self.newGuard) then
+				if  of.source.isPin()=true then 
+				{
+					if of.source.getnameofopaqueaction()=self.newSourceName then
+						if  of.target.isPin()=true then 
+							{if of.target.getnameofopaqueaction()=self.newTargetName then {return of; break;} endif;}	
+						else if of.target.isPin()=false then
+							{if of.target.name=self.newTargetName then {return of; break;} endif;}
+						endif endif endif;
+				}
+				else if  of.source.isPin()=false then
+				{			
+					if of.source.name=self.newSourceName then
+						if  of.target.isPin()=true then 
+							{if of.target.getnameofopaqueaction()=self.newTargetName then {return of; break;} endif;}	
+						else if of.target.isPin()=false then
+							{if of.target.name=self.newTargetName then {return of; break;} endif;}
+						endif endif endif; 
+				}
+					endif
+				endif
+			endif	
+		endif;	
+
+	};
+	return null;
+	
+}
+
+helper  UML::ActivityNode::isPin():Boolean
+{
+	var isPin:=false;
+	ad.objectsOfType(OutputPin)->forEach(op)
+	{
+		if self.toString()=op.toString() then isPin:=true endif;
+	};
+	ad.objectsOfType(InputPin)->forEach(ip)
+	{
+		if self.toString()=ip.toString() then isPin:=true endif;
+	};
+	return isPin;
+}
+
+helper ActivityNode::getnameofopaqueaction():String
+{
+	ad.objectsOfType(OpaqueAction)->forEach(oa)
+	{
+		oa.output->forEach(op)
+		{
+			if op.toString()=self.toString() then return oa.name endif;
+		};		
+	};
+	return "";
+}
+
+helper InputPin::getnameofopaqueaction():String
+{
+	ad.objectsOfType(OpaqueAction)->forEach(oa)
+	{
+		oa.input->forEach(ip)
+		{
+			if ip.toString()=self.toString() then return oa.name endif;
+		};		
+	};
+	return "";
+}
+
+helper deleteunusedshapes()
+{
+	//delete unused activities, pins and control nodes
+	notation.objectsOfType(NOTATION::Shape)->forEach(s)
+	{
+		var exists:=false;
+		if s.type="3007" then 
+			{
+				ad.objectsOfType(OpaqueAction)->forEach(oa)
+					{
+						if s.element.toString()=oa.toString() then exists:=true endif;
+					};
+				if exists=false then notation.removeElement(s) endif;	
+			}
+		endif;
+		if s.type="3013" or s.type="3014" then 
+			{
+				ad.objectsOfType(Pin)->forEach(p)
+					{
+						if s.element.toString()=p.toString() then exists:=true endif;
+					};
+				if exists=false then notation.removeElement(s) endif;	
+			}
+		endif;		
+		
+		if s.type="3059" then 
+			{
+				ad.objectsOfType(ActivityParameterNode)->forEach(pn)
+					{
+						if s.element.toString()=pn.toString() then exists:=true endif;
+					};
+				if exists=false then notation.removeElement(s) endif;	
+			}
+		endif;		
+		
+		if s.type="3038" then 
+			{
+				ad.objectsOfType(DecisionNode)->forEach(dn)
+					{
+						if s.element.toString()=dn.toString() then exists:=true endif;
+					};
+				if exists=false then notation.removeElement(s) endif;	
+			}
+		endif;
+		
+				if s.type="3039" then 
+			{
+				ad.objectsOfType(MergeNode)->forEach(mn)
+					{
+						if s.element.toString()=mn.toString() then exists:=true endif;
+					};
+				if exists=false then notation.removeElement(s) endif;	
+			}
+		endif;
+		
+				if s.type="3040" then 
+			{
+				ad.objectsOfType(ForkNode)->forEach(fn)
+					{
+						if s.element.toString()=fn.toString() then exists:=true endif;
+					};
+				if exists=false then notation.removeElement(s) endif;	
+			}
+		endif;
+		
+				if s.type="3041" then 
+			{
+				ad.objectsOfType(JoinNode)->forEach(jn)
+					{
+						if s.element.toString()=jn.toString() then exists:=true endif;
+					};
+				if exists=false then notation.removeElement(s) endif;	
+			}
+		endif;
+	};
+	
+	// delete unused edges
+	notation.objectsOfType(NOTATION::Connector)->forEach(c)
+		{
+			var exists:=false;
+			ad.objectsOfType(ObjectFlow)->forEach(of)
+				{
+					if c.element.toString()=of.toString() then exists:=true endif;
+				};
+			if exists=false then notation.removeElement(c) endif;	
+		}
+}
+
+helper	 getPinsnotinNotation():Set(Pin)
+{
+	var list:Set(Pin)=null;
+	ad.objectsOfType(Pin)->forEach(p)
+	{
+		var exists:=false;
+		notation.objectsOfType(NOTATION::Shape)->forEach(s)
+		{
+			if s.element.toString()=p.toString() then exists:=true endif
+		};
+		if exists=false then list+=p endif;
+	};
+	return list;
+}
+
+helper Pin::getOpaqueAction():OpaqueAction
+{
+	ad.objectsOfType(OpaqueAction)->forEach(oa)
+	{
+		if oa.input.toString()->includes(self.toString()) or oa.output.toString()->includes(self.toString()) 
+		then {return oa; break;} endif;
+	};
+	return null;
+}
+
+helper getShape(node: ActivityNode):NOTATION::Shape
+{
+	notation.objectsOfType(NOTATION::Shape)->forEach(s)
+	{
+
+		if s.element.toString()=node.toString() then {return s; break;} endif;
+	};
+	
+	return null;
+	
+}

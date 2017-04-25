@@ -1,0 +1,301 @@
+modeltype FHA uses 'http://www.paluno.de/fha';
+modeltype MT uses 'http://www.paluno.de/hazardmitigation';
+modeltype UML uses 'http://www.eclipse.org/uml2/5.0.0/UML'; 
+
+transformation createHRD(in inmodel:FHA, in profile:UML, in change:MT,in ad:UML, out hrd:UML);
+
+property model : UML::Model = null;
+property hazard:Stereotype=null;
+property safetygoal:Stereotype=null;
+property trigger_condition:Stereotype=null;
+property andnodes:Stereotype=null;
+property ornodes:Stereotype=null;
+property hazardassociation:Stereotype=null;
+property hazardrelation:Stereotype=null;
+property mitigation:Stereotype=null;
+property FunctionalHazard:Hazard=null;
+property HazardRelation:MergeNode=null;
+
+main() {
+
+	model := object Model { name :='model' };
+	var stereo:= profile.objects()[Stereotype] ->any(name='profile:'+ name);
+	model.applyProfile(profile.objectsOfType(Profile)![name='profile']);
+	getStereotypes();
+	var StartActivity:= map createActivity();
+	model.packagedElement += StartActivity;
+	applyStereotypes();
+	createEdgestoHazardRelation();
+	hrd.objectsOfType(ControlFlow)->forEach(cf){StartActivity.edge+=cf; cf.applyStereotype(hazardassociation) };
+	hrd.objectsOfType(InitialNode)->forEach(inode){inode.name:=""};
+	StartActivity.edge+=hrd.objectsOfType(ConditionalNode)-> map createMitigationLink();
+
+
+}
+
+mapping  createActivity():Activity
+{
+	name:="FHA";
+	ownedNode+=inmodel.objectsOfType(Hazard)->map createHazard();
+	ownedNode+= inmodel.objectsOfType(Safety_Goal)->map createSafetyGoal();
+	ownedNode+= inmodel.objectsOfType(Trigger_Condition)->map createTriggerCondition();
+	inmodel.objectsOfType(andnode)->forEach(an){ if FunctionalHazard.TC._and->includes(an) then ownedNode+= an.createAndNode() endif;};
+	inmodel.objectsOfType(ornode)->forEach(on){ if FunctionalHazard.TC._or->includes(on)then ownedNode+= on.createOrNode() endif;};
+	applyStereotypes();	
+	if FunctionalHazard!=null then{	var relation:= createHazardRelation(); ownedNode+=relation; HazardRelation:=relation}endif;
+
+	ownedBehavior+=ad.objectsOfType(Activity);
+	ownedGroup+=change.objectsOfType(MitigationList)->map createMitigation();
+	edge+=hrd.objectsOfType(ConditionalNode)-> map createMitigationLink();
+	
+	
+}
+
+mapping Hazard::createHazard():OpaqueAction when{self.isHazardReferencedInMitigation()}
+{
+	name:=self.H_name;
+	FunctionalHazard:=self;
+}
+
+mapping Safety_Goal::createSafetyGoal():OpaqueAction when{FunctionalHazard.SG=self}
+{
+	name:=self.SG_name
+}
+
+mapping Trigger_Condition::createTriggerCondition():OpaqueAction when{FunctionalHazard.TC.cond->includes(self)}
+{
+	name:=self.TC_name
+}
+
+helper FHA::andnode::createAndNode(): InitialNode 
+{ 
+	var andn:InitialNode=object InitialNode
+	{
+		name:=self.and_id
+	};
+	var str:String=self.linked_by;
+	var ending:Boolean=false;	
+	while (ending=false)
+	{
+		if str.indexOf(",")=0 then {andn->map createHazardAssociation(str); ending:=true}
+		else andn->map createHazardAssociation(str.substringBefore(","))endif;
+		str:= str.substringAfter(",");
+	};
+	return andn;
+}
+
+helper FHA::ornode::createOrNode(): InitialNode
+{
+	var orn:InitialNode=object InitialNode
+	{
+		name:=self.or_id
+	};
+	var str:String=self.linked_by;
+	var ending:Boolean=false;
+	while (ending=false)
+	{
+		if str.indexOf(",")=0 then {orn->map createHazardAssociation(str); ending:=true}
+		else orn->map createHazardAssociation(str.substringBefore(",")) endif;
+		str:= str.substringAfter(",")
+	};
+	return orn;
+}
+
+mapping MitigationList::createMitigation():ConditionalNode when{FunctionalHazard!=null}
+{
+	name:=self.ActivityDiagramName;
+}
+
+helper createHazardRelation():MergeNode
+{
+	var HazardRelation:MergeNode= object MergeNode{};
+	-- erstelle Nachrichten hierhin von Hazard, Safety Goal und And/OrNode ohne ausgehenden Nachrichten
+	-- falls keine AND/OrNodes vorhanden sind dann direkt von Trigger Conditions
+		var initials:=hrd.objectsOfType(InitialNode);
+	var counter:=0;
+	initials->forEach(i)
+	{
+	if i.outgoing->isEmpty() then {HazardRelation->map createHazardAssociation(i)}endif;
+	counter:=counter+1	
+	};
+	var opaques:=hrd.objectsOfType(OpaqueAction);
+	opaques->forEach(o)
+	{
+		if o.isStereotypeApplied(hazard) then {HazardRelation->map createHazardAssociation(o)} 
+		elif o.isStereotypeApplied(safetygoal) then {HazardRelation->map createHazardAssociation(o)} 
+		elif counter=0 then{ if o.isStereotypeApplied(trigger_condition) then{HazardRelation->map createHazardAssociation(o)}endif;}endif;
+	};
+
+	return HazardRelation;
+	
+}
+
+mapping InitialNode::createHazardAssociation(str: String): ControlFlow
+{
+	--durchlaufe alle Trigger Conditions, AndNodes und OrNodes 
+	--wo die ID mit der übergebenen übereinstimmt
+	var trigger:=inmodel.objectsOfType(Trigger_Condition);
+	trigger->forEach(tc)
+	{
+		 if tc.TC_ID=str 
+		 then
+		 {
+		 	var opaques:=hrd.objectsOfType(OpaqueAction);
+		 	opaques->forEach(oa)
+		 	{
+		 		if oa.name= tc.TC_name then source:=oa endif;
+		 	}
+		 } 
+		 endif;
+	};
+	var ands:=inmodel.objectsOfType(andnode);
+	ands->forEach(a)
+	{
+		 if a.and_id=str 
+		 then
+		 {
+		 	var initials:=hrd.objectsOfType(InitialNode);
+		 	initials->forEach(ins)
+		 	{
+		 		if ins.name= a.and_id then source:=ins endif;
+		 	}
+		 } 
+		 endif;
+	};
+	var ors:=inmodel.objectsOfType(ornode);
+	ors->forEach(o)
+	{
+		 if o.or_id=str 
+		 then
+		 {
+		 	var initials:=hrd.objectsOfType(InitialNode);
+		 	initials->forEach(ins)
+		 	{
+		 		if ins.name= o.or_id then source:=ins endif;
+		 	}
+		 } 
+		 endif;
+	};
+	target:=self;
+}
+
+mapping MergeNode::createHazardAssociation(n:ActivityNode): ControlFlow
+{
+	source:=n;
+	target:=self;
+}
+
+helper getStereotypes()
+{
+	profile.objectsOfType(Stereotype)->forEach(s)
+	{
+		if s.name="Hazard" then{hazard:=s}
+		elif s.name="Safety_Goal" then{safetygoal:=s} 
+		elif s.name="trigger_Condition" then{trigger_condition:=s}
+		elif s.name="Context_Conjunction" then{andnodes:=s}
+		elif s.name="Context_Disjunction" then{ornodes:=s}
+		elif s.name="Hazard_Association" then{hazardassociation:=s}
+		elif s.name="Mitigation" then{mitigation:=s}
+		elif s.name="Hazard_Relation" then{hazardrelation:=s}endif;
+	}
+}
+mapping ConditionalNode::createMitigationLink():ControlFlow
+{
+	target:=self;
+	source:=HazardRelation;
+		
+
+	
+}
+
+helper applyStereotypes()
+{
+	var trigger:=inmodel.objectsOfType(Trigger_Condition);
+	trigger->forEach(tc)
+	{
+		 	var opaques:=hrd.objectsOfType(OpaqueAction);
+		 	opaques->forEach(oa)
+		 	{
+		 		if oa.name= tc.TC_name then oa.applyStereotype(trigger_condition) endif;
+		 	}
+
+	};
+	var haz:=inmodel.objectsOfType(Hazard);
+	haz->forEach(h)
+	{
+		 	var opaques:=hrd.objectsOfType(OpaqueAction);
+		 	opaques->forEach(oa)
+		 	{
+		 		if oa.name= h.H_name then oa.applyStereotype(hazard) endif;
+		 	}
+
+	};
+	var safgoal:=inmodel.objectsOfType(Safety_Goal);
+	safgoal->forEach(sg)
+	{
+		 	var opaques:=hrd.objectsOfType(OpaqueAction);
+		 	opaques->forEach(oa)
+		 	{
+		 		if oa.name= sg.SG_name then oa.applyStereotype(safetygoal) endif;
+		 	}
+
+	};
+	var andnod:=inmodel.objectsOfType(andnode);
+	andnod->forEach(a)
+	{
+		 	var initials:=hrd.objectsOfType(InitialNode);
+		 	initials->forEach(i)
+		 	{
+		 		if i.name= a.and_id then i.applyStereotype(andnodes) endif;
+		 	}
+
+	};
+	var ornod:=inmodel.objectsOfType(ornode);
+	ornod->forEach(o)
+	{
+		 	var initials:=hrd.objectsOfType(InitialNode);
+		 	initials->forEach(i)
+		 	{
+		 		if i.name= o.or_id then i.applyStereotype(ornodes) endif;
+		 	}
+
+	};
+	hrd.objectsOfType(MergeNode)->forEach(mn)
+	{
+		mn.applyStereotype(hazardrelation)
+	};
+	var conditionals:=hrd.objectsOfType(ConditionalNode)->forEach(cn)
+	{
+		cn.applyStereotype(mitigation)
+	};
+			
+}
+helper createEdgestoHazardRelation()
+{
+	var HazardRelation:=hrd.objectsOfType(MergeNode);
+	HazardRelation->forEach(HR)
+	{
+		var initials:=hrd.objectsOfType(InitialNode);
+		var counter:=0;
+		initials->forEach(i){counter:=counter+1	};
+		var opaques:=hrd.objectsOfType(OpaqueAction);
+		opaques->forEach(o)
+		{
+			if o.isStereotypeApplied(hazard) then {HR->map createHazardAssociation(o)} 
+			elif o.isStereotypeApplied(safetygoal) then {HR->map createHazardAssociation(o)} 
+			elif counter=0 then{ if o.isStereotypeApplied(trigger_condition) then{HR->map createHazardAssociation(o)}endif;}endif;
+		};
+	}
+}
+
+helper Hazard::isHazardReferencedInMitigation():Boolean
+{
+	var exists:=false;
+	change.objectsOfType(MitigationList)->forEach(ml)
+	{
+		if self.H_ID= ml.Hazard_ID then exists:=true endif;
+	};	
+	return exists;
+	
+}
+

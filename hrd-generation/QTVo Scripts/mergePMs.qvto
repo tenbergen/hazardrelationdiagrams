@@ -1,0 +1,15 @@
+modeltype MT uses 'http://www.paluno.de/hazardmitigation';
+transformation mergeMTs(in c1:MT, in c2:MT, out c3:MT);
+
+main() 
+{
+	c1.objectsOfType(MitigationList)-> map addMitigations();
+	c2.objectsOfType(MitigationList)-> map addMitigations();
+}
+
+mapping MitigationList::addMitigations():MitigationList
+{
+	umlModelFile:=self.umlModelFile;
+	ActivityDiagramName:=self.ActivityDiagramName;
+	Mitigations+=self.Mitigations;
+}

@@ -1,0 +1,12 @@
+modeltype UML uses 'http://www.eclipse.org/uml2/5.0.0/UML'; 
+
+transformation MergeADs(in ad1:UML, in ad2:UML, out ad3:UML);
+
+property model : UML::Model = null;
+
+main() 
+{
+	model := object Model { name :='model' };
+	model.packagedElement += ad1.objectsOfType(Activity);
+	model.packagedElement += ad2.objectsOfType(Activity);
+}

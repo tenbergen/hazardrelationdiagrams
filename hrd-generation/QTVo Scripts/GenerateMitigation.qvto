@@ -1,0 +1,513 @@
+modeltype UML uses 'http://www.eclipse.org/uml2/5.0.0/UML';
+modeltype MT uses 'http://www.paluno.de/hazardmitigation';
+
+transformation mitigationtoad(inout ad:UML, in change:MT );
+
+main() 
+{
+	var remAE:= change.objectsOfType(RemoveActivityEdge);
+	remAE->forEach(r){	r.deleteActivityEdge()};
+	var remA:= change.objectsOfType(RemoveActivity);
+	remA->forEach(r){	r.deleteActivity()};
+	var remP:= change.objectsOfType(RemovePin);
+	remP->forEach(r){	r.deletePin()};
+	var remCN:= change.objectsOfType(RemoveControlNode);
+	remCN->forEach(r)	{	r.deleteControlNode()};
+	var subA:=change.objectsOfType(SubstituteActivity);
+	subA->forEach(s)	{	s.replaceActivity()	};
+	var subP:=change.objectsOfType(SubstitutePin);
+	subP->forEach(s){	s.replacePin()};
+	change.objectsOfType(InsertActivity)->map addActivity();
+	change.objectsOfType(InsertPin)->map addPin();
+	change.objectsOfType(InsertControlNode)->map addControlNode();
+	var subCN:=change.objectsOfType(SubstituteControlNode);
+	subCN->forEach(s){	s.replaceControlNode()};	
+	change.objectsOfType(InsertActivityEdge)->map addActivityEdge();
+	var subAE:=change.objectsOfType(SubstituteActivityEdge);
+	subAE->forEach(s){	s.replaceActivityEdge()};
+--add substistuted and added actions to parent activity
+	ad.objectsOfType(Activity)->forEach(a)
+	{
+	ad.objectsOfType(OpaqueAction)->forEach(oa){a.ownedNode+=oa};
+	ad.objectsOfType(ObjectFlow)->forEach(of){a.edge+=of};
+	ad.objectsOfType(ActivityParameterNode)->forEach(pa){a.ownedNode+=pa};
+	ad.objectsOfType(ControlNode)->forEach(cn){a.ownedNode+=cn};
+	};
+	deleteunusedpins();
+}
+
+mapping inout InsertActivity::addActivity(): OpaqueAction when{self.Activityexists()=false}
+{
+	name:=self.activityName;
+}
+
+mapping inout InsertActivityEdge::addActivityEdge() when{self.Edgeexists()=false}
+{
+	var objectflow:= object ObjectFlow
+	{
+		name:=self.Message;
+		if getIDofActivity(self.SourceName)=null then
+		 	{
+		 	if getIDofControlNode(self.SourceName)=null then source:=getIDofPin(self.SourceName)
+			else source:=getIDofControlNode(self.SourceName) endif;
+			}
+		else 
+		{
+			var outputport:= object OutputPin{}; getIDofActivity(self.SourceName).outputValue+=outputport; source:=outputport;
+		}endif;
+		if getIDofActivity(self.targetName)=null then
+			{
+			if getIDofControlNode(self.targetName)=null then target:=getIDofPin(self.targetName)
+			else target:=getIDofControlNode(self.targetName) endif;
+			}
+		else 
+		{
+			var inputport:=object InputPin{}; getIDofActivity(self.targetName).inputValue+=inputport; target:=inputport;
+		} endif;
+		
+
+
+		if self.Guard.toString()!="null" then {var guardof:LiteralBoolean= object LiteralBoolean{};if self.Guard="true" then guardof.value:=true else guardof.value:=false endif; guardof.name:=self.Guard; guard:=guardof;}
+		else{} endif;
+
+
+	}
+}
+
+mapping inout InsertPin::addPin():ActivityParameterNode when{self.Pinexists()=false}
+{
+	name:=self.pinName
+}
+
+mapping inout InsertControlNode::addControlNode() when{self.ControlNodeexists()=false}
+{
+--Schablone: Schablone anpassen mit Namen und eingehende + ausgehende Nachrichten rausnehmen
+	if self.nodeType="Fork" then 
+	{ 
+		var  controlnode:ControlNode:= object ForkNode
+		{
+			name:=self.NodeName
+		
+		};
+	}
+	else if self.nodeType="Join" then 
+	{ 
+		var  controlnode:ControlNode:= object JoinNode
+		{
+			name:=self.NodeName
+		};
+	}
+	else if self.nodeType="Merge" then 
+	{
+		var  controlnode:ControlNode:= object MergeNode
+		{
+			name:=self.NodeName
+		};
+	}
+	else if self.nodeType="Decision" then 
+	{ 
+		var  controlnode:ControlNode:= object DecisionNode
+		{
+			name:=self.NodeName
+		};
+	}
+	endif endif endif endif;
+
+}
+
+helper RemoveActivity::deleteActivity()
+{
+	var activities:=ad.objectsOfType(OpaqueAction);
+	activities->forEach(a)
+	{
+	if self.activityName = a.name then 
+		ad.removeElement(a)
+ 	endif;
+	}
+}
+
+helper RemovePin::deletePin()
+{
+	var pins:=ad.objectsOfType(ActivityParameterNode);
+	pins->forEach(p)
+	{
+	if self.pinName = p.name then 
+		ad.removeElement(p)
+ 	endif;
+	}
+}
+
+helper RemoveActivityEdge::deleteActivityEdge()
+{
+	 var messages1:=ad.objectsOfType(ObjectFlow);
+	 messages1->forEach(m)
+	 {
+
+
+	 	if m.source.name=self.sourceName or m.source.outputisPinofActivity(getIDofActivity(self.sourceName))then 
+		 	if self.targetName = m.target.name or m.target.inputisPinofActivity(getIDofActivity(self.targetName)) then
+		 		if ((m.name.toString()="null"  and self.message.toString()="")  or self.message=m.name) then
+		 			if ((m.guard.toString()="null"  and self.Guard.toString()="null") or self.Guard = m.guard.name) then
+		 				{
+		 					if getIDofActivity(self.sourceName)!=null then ad.removeElement(m.source)endif;
+		 					if getIDofActivity(self.targetName)!=null then ad.removeElement(m.target)endif;
+		 					ad.removeElement(m);
+		 					log("message deleted");
+		 				}
+	 				endif 
+	 			endif
+			endif 
+		 endif;
+	 };
+
+}
+
+helper RemoveControlNode::deleteControlNode()
+{
+	if self.nodeType="Fork" then 
+	{
+		var forknodes:=ad.objectsOfType(ForkNode);
+		forknodes->forEach(n)
+		{
+			if n.name=self.NodeName then 
+				 ad.removeElement(n) endif;
+		};
+	}
+	else if self.nodeType="Decision" then 
+	{	
+		var decisionnodes:=ad.objectsOfType(DecisionNode);
+		decisionnodes->forEach(n)
+		{
+			if n.name=self.NodeName then 
+				 ad.removeElement(n) endif;
+		};
+	}
+	else if self.nodeType="Merge" then 
+	{
+		var mergenodes:=ad.objectsOfType(MergeNode);
+		mergenodes->forEach(n)
+		{
+			if n.name=self.NodeName then 
+				 ad.removeElement(n) endif;
+		};
+	}
+	else if self.nodeType="Join" then 
+	{
+		var joinnodes:=ad.objectsOfType(JoinNode);
+		joinnodes->forEach(n)
+		{
+			if n.name=self.NodeName then 
+				 ad.removeElement(n) endif;
+		};
+	} endif endif endif endif;		
+}
+
+helper SubstituteActivity::replaceActivity()
+{
+	var activities:=ad.objectsOfType(OpaqueAction);
+	activities->forEach (a) 
+	{
+		if self.oldActivityName= a.name then a.name:= self.newActivityName endif;
+	}	
+}
+
+helper SubstituteActivityEdge::replaceActivityEdge()
+{
+log("oldname "+ self.oldMessage.toString());
+log("newname "+ self.newMessage.toString());
+log("oldguard "+ self.oldGuard.toString());
+log("newguard "+ self.newGuard.toString());
+log("oldsource "+ self.oldSourceName);
+log("newsource "+ self.newSourceName.toString());
+log("oldtarget "+ self.oldTargetName.toString());
+log("newtarget "+ self.newTargetName.toString());
+		var sourceissub:=isSubstituted(self.oldSourceName);
+		var targetissub:=isSubstituted(self.oldTargetName);
+		log(sourceissub.toString());
+		log(targetissub.toString());
+	var objects:=ad.objectsOfType(ObjectFlow);
+	objects->forEach(o)
+	{
+--		var sourceissub:=isSubstituted(self.oldSourceName);
+--		var targetissub:=isSubstituted(self.oldTargetName);
+		if ((o.name.toString()="null"  and self.oldMessage.toString()="") or o.name=self.oldMessage) then
+		
+			if   o.source.name=self.oldSourceName or o.source.outputisPinofActivity(getIDofActivity(self.oldSourceName)) or sourceissub then 
+				if o.target.name = self.oldTargetName or o.target.inputisPinofActivity(getIDofActivity(self.oldTargetName)) or targetissub then 
+					if ((o.guard.toString()="null"  and self.oldGuard.toString()="null") or o.guard.name=self.oldGuard)  then 
+					{
+						log(o.name.toString() + " found");
+						if o.source.outputisPinofActivity(getIDofActivity(self.oldSourceName))=true then ad.removeElement(o.source) endif;
+						if o.target.inputisPinofActivity(getIDofActivity(self.oldTargetName))=true then ad.removeElement(o.target) endif;
+						o.name:=self.newMessage;
+						if (self.oldGuard.toString()!="null" and self.newGuard.toString()!="null") then{o.guard.name:=self.newGuard;}
+						else if (self.oldGuard.toString()="null" and self.newGuard.toString()!="null") then{var guardof:LiteralBoolean=object LiteralBoolean{name:=self.newGuard; value:=true};}  else{} endif endif;
+						o.guard.name:=self.newGuard;
+						if getIDofActivity(self.newSourceName)=null then
+					 	{
+					 		if getIDofControlNode(self.newSourceName)=null then o.source:=getIDofPin(self.newSourceName)
+							else o.source:=getIDofControlNode(self.newSourceName) endif;
+						}
+						else 
+						{							
+							var outputport:= object OutputPin{}; getIDofActivity(self.newSourceName).outputValue+=outputport; o.source:=outputport;
+						}endif;
+						if getIDofActivity(self.newTargetName)=null then
+						{
+						if getIDofControlNode(self.newTargetName)=null then o.target:=getIDofPin(self.newTargetName)
+						else o.target:=getIDofControlNode(self.newTargetName) endif;
+						}
+						else 
+						{
+							var inputport:=object InputPin{}; getIDofActivity(self.newTargetName).inputValue+=inputport; o.target:=inputport;
+						} endif;
+					}
+			
+			endif endif endif endif;	
+		
+	};
+}
+
+helper SubstitutePin::replacePin()
+{
+	var pins:=ad.objectsOfType(ActivityParameterNode);
+	pins->forEach(p)
+	{
+		if p.name= self.oldPinName then p.name:=self.newPinName endif;
+	}
+}
+
+helper SubstituteControlNode::replaceControlNode()
+{
+	var nodes:=ad.objectsOfType(ControlNode);
+	nodes->forEach(n)
+	{
+		if n.name=self.oldNodeName then
+		{
+			ad.removeElement(n);
+			if self.newNodeType="Fork" then 
+			{ 
+				var  controlnode:ControlNode:= object ForkNode
+					{
+					 name:=self.newNodeName
+					};
+			}
+			else if self.newNodeType="Join" then 
+			{ 
+				var  controlnode:ControlNode:= object JoinNode
+					{
+					name:=self.newNodeName
+					};
+			}
+			else if self.newNodeType="Merge" then 
+			{
+				var  controlnode:ControlNode:= object MergeNode
+					{
+					name:=self.newNodeName
+					};
+			}
+			else if self.newNodeType="Decision" then 
+			{ 
+				var  controlnode:ControlNode:= object DecisionNode
+					{
+					name:=self.newNodeName
+					};
+			}
+			endif endif endif endif
+		}
+		endif;
+	}
+}
+
+helper getIDofActivity(mystring:String):OpaqueAction
+{
+	var activities:=ad.objectsOfType(OpaqueAction);
+	var opaque:OpaqueAction:=null;
+	activities->forEach(a)
+	{
+		if a.name=mystring then {return opaque:=a; break }endif;
+	};
+	
+	return opaque;
+}
+helper getIDofPin(mystring:String):ActivityParameterNode
+{
+	var pins:=ad.objectsOfType(ActivityParameterNode);
+	var pin:ActivityParameterNode:=null;
+	pins->forEach(p)
+	{
+		if p.name=mystring then {return pin:=p; break }endif;
+	};
+	
+	return pin;
+}
+
+helper getIDofControlNode(mystring:String):ControlNode
+{
+	var nodes:=ad.objectsOfType(ControlNode);
+	var node:ControlNode:=null;
+	nodes->forEach(n)
+	{
+		if n.name=mystring then {return node:=n; break }endif;
+	};
+	
+	return node;
+}
+
+helper ActivityNode::outputisPinofActivity(OA:OpaqueAction):Boolean
+{
+	var exist:=false;
+	var ports:=ad.objectsOfType(OutputPin);
+	ports->forEach(p)
+	{
+		if self=p then if OA.output->includes(p)=true  then exist:=true endif endif;
+	};
+	return exist;
+}
+
+helper ActivityNode::inputisPinofActivity(OA:OpaqueAction):Boolean
+{
+	var exist:=false;
+	var ports:=ad.objectsOfType(InputPin);
+	ports->forEach(p)
+	{
+		if self=p then if OA.inputValue->includes(p)=true  then exist:=true endif endif;
+	};
+	return exist;
+}
+
+helper InsertActivity::Activityexists():Boolean
+{
+	var exists:=false;
+	var activities:=ad.objectsOfType(OpaqueAction);
+	activities->forEach(a)
+	{
+		if self.activityName = a.name then {exists:=true; break;}endif;
+	};
+	return exists;
+}
+
+helper InsertPin::Pinexists():Boolean
+{
+	var exists:=false;
+	var pins:=ad.objectsOfType(ActivityParameterNode);
+	pins->forEach(p)
+	{
+		if self.pinName = p.name then {exists:=true; break;}endif;
+	};
+	return exists;
+}
+
+helper InsertActivityEdge::Edgeexists():Boolean
+{
+	var exists:=false;
+		 var messages1:=ad.objectsOfType(ObjectFlow);
+	 messages1->forEach(m)
+	 {
+	 	if self.SourceName = m.source.name then 
+		 	if self.targetName = m.target.name then
+		 		if self.Message=m.name then
+		 			if self.Guard = m.guard.name then
+		 				{
+							exists:=true; break;
+		 				}
+	 				endif 
+	 			endif
+			endif 
+		 endif;
+	 };
+	return exists;
+}
+
+helper InsertControlNode::ControlNodeexists():Boolean
+{
+	var exists:=false;
+	if self.nodeType="Fork" then 
+	{
+		var forknodes:=ad.objectsOfType(ForkNode);
+		forknodes->forEach(n)
+		{
+			if n.name=self.NodeName then {exists:=true; break;} endif;
+		};
+	}
+	else if self.nodeType="Decision" then 
+	{	
+		var decisionnodes:=ad.objectsOfType(DecisionNode);
+		decisionnodes->forEach(n)
+		{
+			if n.name=self.NodeName then {exists:=true; break;} endif;
+		};
+	}
+	else if self.nodeType="Merge" then 
+	{
+		var mergenodes:=ad.objectsOfType(MergeNode);
+		mergenodes->forEach(n)
+		{
+			if n.name=self.NodeName then{exists:=true; break;} endif;
+		};
+	}
+	else if self.nodeType="Join" then 
+	{
+		var joinnodes:=ad.objectsOfType(JoinNode);
+		joinnodes->forEach(n)
+		{
+			if n.name=self.NodeName then {exists:=true; break;} endif;
+		};
+	} endif endif endif endif;
+	
+	return exists;
+}
+
+helper isSubstituted(str:String):Boolean
+{
+	var activities:=change.objectsOfType(SubstituteActivity);
+	var pin:=change.objectsOfType(SubstitutePin);	
+	var cnode:= change.objectsOfType(SubstituteControlNode);
+	var remactivities:=change.objectsOfType(RemoveActivity);
+	var rempin:=change.objectsOfType(RemovePin);	
+	var remcnode:= change.objectsOfType(RemoveControlNode);
+	var substituted:=false;
+	
+	activities->forEach(sa)
+	{
+		if sa.oldActivityName=str then substituted:=true endif;
+	};
+	remactivities->forEach(ra)
+	{
+		log(ra.activityName+"    "+ str);
+		if ra.activityName=str then substituted:=true endif;
+	};
+	pin->forEach(sp)
+	{
+		if sp.oldPinName=str then substituted:=true endif;
+	};
+	rempin->forEach(rp)
+	{
+		if rp.pinName=str then substituted:=true endif;
+	};
+	cnode->forEach(scn)
+	{
+		if scn.oldNodeName=str then substituted:=true endif;
+	};
+	remcnode->forEach(rcn)
+	{
+		if rcn.NodeName=str then substituted:=true endif;
+	};	
+	
+	return substituted;
+}
+helper deleteunusedpins()
+{
+	var messages:=ad.objectsOfType(ObjectFlow);
+	var pins:= ad.objectsOfType(Pin);
+	pins->forEach(p)
+	{
+		var used:=false;
+		messages->forEach(m)
+		{
+			if m.source=p or m.target=p then used:=true endif;
+		};
+		
+		if used=false then ad.removeElement(p) endif;
+	}	
+}
